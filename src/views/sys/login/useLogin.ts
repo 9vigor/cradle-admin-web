@@ -1,11 +1,13 @@
 import type { ValidationRule } from 'ant-design-vue/lib/form/Form';
 import type { RuleObject } from 'ant-design-vue/lib/form/interface';
-import { ref, computed, unref, Ref } from 'vue';
+import { computed, ref, Ref, unref } from 'vue';
 import { useI18n } from '/@/hooks/web/useI18n';
 
 export enum LoginStateEnum {
   LOGIN,
   REGISTER,
+  GOOGLE_BIND,
+  GOOGLE_VERIFY,
   RESET_PASSWORD,
   MOBILE,
   QR_CODE,
@@ -42,6 +44,7 @@ export function useFormRules(formData?: Recordable) {
   const { t } = useI18n();
 
   const getAccountFormRule = computed(() => createRule(t('sys.login.accountPlaceholder')));
+  const getGoogleCodeFormRule = computed(() => createRule(t('sys.login.googleCodePlaceholder')));
   const getPasswordFormRule = computed(() => createRule(t('sys.login.passwordPlaceholder')));
   const getSmsFormRule = computed(() => createRule(t('sys.login.smsPlaceholder')));
   const getMobileFormRule = computed(() => createRule(t('sys.login.mobilePlaceholder')));
@@ -64,6 +67,7 @@ export function useFormRules(formData?: Recordable) {
 
   const getFormRules = computed((): { [k: string]: ValidationRule | ValidationRule[] } => {
     const accountFormRule = unref(getAccountFormRule);
+    const googleCodeFormRule = unref(getGoogleCodeFormRule);
     const passwordFormRule = unref(getPasswordFormRule);
     const smsFormRule = unref(getSmsFormRule);
     const mobileFormRule = unref(getMobileFormRule);
@@ -71,6 +75,9 @@ export function useFormRules(formData?: Recordable) {
     const mobileRule = {
       sms: smsFormRule,
       mobile: mobileFormRule,
+    };
+    const googleCodeRule = {
+      googleCode: googleCodeFormRule,
     };
     switch (unref(currentState)) {
       // register form rules
@@ -95,7 +102,10 @@ export function useFormRules(formData?: Recordable) {
       // mobile form rules
       case LoginStateEnum.MOBILE:
         return mobileRule;
-
+      // google bind rules
+      case LoginStateEnum.GOOGLE_BIND:
+      case LoginStateEnum.GOOGLE_VERIFY:
+        return googleCodeRule;
       // login form rules
       default:
         return {

@@ -1,0 +1,106 @@
+<template>
+  <div>
+    <BasicTable @register="registerTable">
+      <template #toolbar>
+        <a-button type="primary" @click="handleCreate"> {{ t('common.createText') }} </a-button>
+      </template>
+      <template #action="{ record }">
+        <TableAction
+          :actions="[
+            {
+              icon: 'clarity:note-edit-line',
+              tooltip: t('common.editText'),
+              onClick: handleEdit.bind(null, record),
+            },
+            {
+              icon: 'ant-design:delete-outlined',
+              color: 'error',
+              tooltip: t('common.delText'),
+              popConfirm: {
+                title: t('common.delTip'),
+                confirm: handleDelete.bind(null, record),
+              },
+            },
+          ]"
+        />
+      </template>
+    </BasicTable>
+    <DeptDrawer @register="registerDrawer" @success="handleSuccess" />
+  </div>
+</template>
+<script lang="ts">
+  import { defineComponent } from 'vue';
+
+  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+
+  import DeptDrawer from './DeptDrawer.vue';
+
+  import { columns, searchFormSchema } from './dept.data';
+  import { useI18n } from '/@/hooks/web/useI18n';
+  import { deleteDept, getDeptList } from '/@/api/sys/dept';
+  import { useDrawer } from '/@/components/Drawer';
+
+  export default defineComponent({
+    name: 'DeptManagement',
+    components: { BasicTable, DeptDrawer, TableAction },
+    setup() {
+      const { t } = useI18n();
+      const [registerDrawer, { openDrawer }] = useDrawer();
+      const [registerTable, { reload }] = useTable({
+        title: '部门列表',
+        api: getDeptList,
+        columns,
+        formConfig: {
+          labelWidth: 120,
+          schemas: searchFormSchema,
+        },
+        isTreeTable: true,
+        pagination: false,
+        striped: false,
+        useSearchForm: true,
+        showTableSetting: true,
+        bordered: true,
+        showIndexColumn: false,
+        canResize: true,
+        actionColumn: {
+          width: 100,
+          title: '操作',
+          dataIndex: 'action',
+          slots: { customRender: 'action' },
+          fixed: undefined,
+        },
+      });
+
+      function handleCreate() {
+        openDrawer(true, {
+          isUpdate: false,
+        });
+      }
+
+      function handleEdit(record: Recordable) {
+        openDrawer(true, {
+          record,
+          isUpdate: true,
+        });
+      }
+
+      function handleDelete(record: Recordable) {
+        deleteDept(record.id).then(() => reload());
+      }
+
+      function handleSuccess() {
+        reload();
+      }
+
+      return {
+        t,
+        registerTable,
+        registerDrawer,
+        handleCreate,
+        handleEdit,
+        handleDelete,
+        handleSuccess,
+      };
+    },
+  });
+</script>

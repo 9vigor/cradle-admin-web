@@ -11,6 +11,9 @@ import { RequestEnum } from '/@/enums/httpEnum';
 
 export * from './axiosTransform';
 
+const isRefreshing = false;
+const retryRequests = [];
+
 /**
  * @description:  axios module
  */
@@ -113,7 +116,7 @@ export class VAxios {
       isFunction(responseInterceptorsCatch) &&
       this.axiosInstance.interceptors.response.use(undefined, (error) => {
         // @ts-ignore
-        responseInterceptorsCatch(this.axiosInstance, error);
+        return responseInterceptorsCatch(this.axiosInstance, error, isRefreshing, retryRequests);
       });
   }
 

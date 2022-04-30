@@ -2,10 +2,10 @@
  * @description: Request result set
  */
 export enum ResultEnum {
-  SUCCESS = 0,
-  ERROR = 1,
-  TIMEOUT = 401,
-  TYPE = 'success',
+  SUCCESS = '0',
+  ERROR = '1',
+  TOKEN_EXPIRED = '1011',
+  REFRESH_TOKEN_EXPIRED = '1012',
 }
 
 /**

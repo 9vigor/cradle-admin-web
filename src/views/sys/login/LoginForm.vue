@@ -119,7 +119,7 @@
   const rememberMe = ref(false);
 
   const formData = reactive({
-    account: 'vben',
+    account: 'admin',
     password: '123456',
   });
 
@@ -128,23 +128,39 @@
   //onKeyStroke('Enter', handleLogin);
 
   const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN);
-
   async function handleLogin() {
     const data = await validForm();
     if (!data) return;
     try {
       loading.value = true;
-      const userInfo = await userStore.login({
+      const verifyResult = await userStore.verify({
         password: data.password,
         username: data.account,
         mode: 'none', //不要默认的错误提示
       });
-      if (userInfo) {
-        notification.success({
-          message: t('sys.login.loginSuccessTitle'),
-          description: `${t('sys.login.loginSuccessDesc')}: ${userInfo.realName}`,
-          duration: 3,
-        });
+      if (verifyResult) {
+        if (verifyResult.googleVerify) {
+          userStore.setVerifyToken(verifyResult.verifyToken);
+          if (verifyResult.googleBind) {
+            setLoginState(LoginStateEnum.GOOGLE_VERIFY);
+          } else {
+            userStore.setGoogleQrUrl(verifyResult.googleQrUrl);
+            setLoginState(LoginStateEnum.GOOGLE_BIND);
+          }
+        } else {
+          const userInfo = await userStore.login({
+            verifyToken: verifyResult.verifyToken,
+            googleCode: null,
+            mode: 'none',
+          });
+          if (userInfo) {
+            notification.success({
+              message: t('sys.login.loginSuccessTitle'),
+              description: `${t('sys.login.loginSuccessDesc')}: ${userInfo.name}`,
+              duration: 3,
+            });
+          }
+        }
       }
     } catch (error) {
       createErrorModal({

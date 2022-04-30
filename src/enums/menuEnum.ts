@@ -33,9 +33,9 @@ export enum MenuModeEnum {
 }
 
 export enum MenuSplitTyeEnum {
-  NONE,
-  TOP,
-  LEFT,
+  NONE = 'NONE',
+  TOP = 'TOP',
+  LEFT = 'LEFT',
 }
 
 export enum TopMenuAlignEnum {
@@ -47,4 +47,24 @@ export enum TopMenuAlignEnum {
 export enum MixSidebarTriggerEnum {
   HOVER = 'hover',
   CLICK = 'click',
+}
+
+export enum ResourceScopeEnum {
+  //总台
+  MASTER = 'MASTER',
+  //普通
+  ADMIN = 'ADMIN',
+  //匿名
+  ANONYMOUS = 'ANONYMOUS',
+}
+
+export enum ResourceTargetEnum {
+  MAIN = 'MAIN',
+  BLANK = 'BLANK',
+}
+
+export enum ResourceTypeEnum {
+  DIRECTORY = 'DIRECTORY',
+  MENU = 'MENU',
+  BUTTON = 'BUTTON',
 }

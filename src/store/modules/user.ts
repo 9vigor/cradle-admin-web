@@ -4,25 +4,32 @@ import { defineStore } from 'pinia';
 import { store } from '/@/store';
 import { RoleEnum } from '/@/enums/roleEnum';
 import { PageEnum } from '/@/enums/pageEnum';
-import { ROLES_KEY, TOKEN_KEY, USER_INFO_KEY } from '/@/enums/cacheEnum';
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY, ROLES_KEY, USER_INFO_KEY } from '/@/enums/cacheEnum';
 import { getAuthCache, setAuthCache } from '/@/utils/auth';
-import { GetUserInfoModel, LoginParams } from '/@/api/sys/model/userModel';
-import { doLogout, getUserInfo, loginApi } from '/@/api/sys/user';
+import {
+  GetUserInfoModel,
+  LoginParams,
+  VerifyParams,
+  VerifyResultModel,
+} from '/@/api/sys/model/userModel';
+import { doLogout, getPersonalInfo, loginApi, verifyApi } from '/@/api/sys/user';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { router } from '/@/router';
 import { usePermissionStore } from '/@/store/modules/permission';
 import { RouteRecordRaw } from 'vue-router';
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
-import { isArray } from '/@/utils/is';
 import { h } from 'vue';
 
 interface UserState {
   userInfo: Nullable<UserInfo>;
-  token?: string;
+  accessToken?: string;
+  refreshToken?: string;
   roleList: RoleEnum[];
   sessionTimeout?: boolean;
   lastUpdateTime: number;
+  verifyToken: string;
+  googleQrUrl: string;
 }
 
 export const useUserStore = defineStore({
@@ -30,21 +37,36 @@ export const useUserStore = defineStore({
   state: (): UserState => ({
     // user info
     userInfo: null,
-    // token
-    token: undefined,
+    // accessToken
+    accessToken: undefined,
+
+    refreshToken: undefined,
     // roleList
     roleList: [],
     // Whether the login expired
     sessionTimeout: false,
     // Last fetch time
     lastUpdateTime: 0,
+
+    verifyToken: '',
+
+    googleQrUrl: '',
   }),
   getters: {
     getUserInfo(): UserInfo {
       return this.userInfo || getAuthCache<UserInfo>(USER_INFO_KEY) || {};
     },
     getToken(): string {
-      return this.token || getAuthCache<string>(TOKEN_KEY);
+      return this.accessToken || getAuthCache<string>(ACCESS_TOKEN_KEY);
+    },
+    getRefreshToken(): string {
+      return this.refreshToken || getAuthCache<string>(REFRESH_TOKEN_KEY);
+    },
+    getVerifyToken(): string {
+      return this.verifyToken;
+    },
+    getGoogleQrUrl(): string {
+      return this.googleQrUrl;
     },
     getRoleList(): RoleEnum[] {
       return this.roleList.length > 0 ? this.roleList : getAuthCache<RoleEnum[]>(ROLES_KEY);
@@ -58,8 +80,18 @@ export const useUserStore = defineStore({
   },
   actions: {
     setToken(info: string | undefined) {
-      this.token = info ? info : ''; // for null or undefined value
-      setAuthCache(TOKEN_KEY, info);
+      this.accessToken = info ? info : ''; // for null or undefined value
+      setAuthCache(ACCESS_TOKEN_KEY, info);
+    },
+    setRefreshToken(info: string | undefined) {
+      this.refreshToken = info ? info : '';
+      setAuthCache(REFRESH_TOKEN_KEY, info);
+    },
+    setVerifyToken(verifyToken: string) {
+      this.verifyToken = verifyToken;
+    },
+    setGoogleQrUrl(googleQrUrl: string) {
+      this.googleQrUrl = googleQrUrl;
     },
     setRoleList(roleList: RoleEnum[]) {
       this.roleList = roleList;
@@ -75,10 +107,27 @@ export const useUserStore = defineStore({
     },
     resetState() {
       this.userInfo = null;
-      this.token = '';
+      this.accessToken = '';
       this.roleList = [];
       this.sessionTimeout = false;
     },
+
+    /**
+     * @description: verify
+     */
+    async verify(
+      params: VerifyParams & {
+        mode?: ErrorMessageMode;
+      },
+    ): Promise<VerifyResultModel | null> {
+      try {
+        const { mode, ...verifyParams } = params;
+        return await verifyApi(verifyParams, mode);
+      } catch (error) {
+        return Promise.reject(error);
+      }
+    },
+
     /**
      * @description: login
      */
@@ -91,10 +140,11 @@ export const useUserStore = defineStore({
       try {
         const { goHome = true, mode, ...loginParams } = params;
         const data = await loginApi(loginParams, mode);
-        const { token } = data;
+        const { accessToken, refreshToken } = data;
 
-        // save token
-        this.setToken(token);
+        // save accessToken
+        this.setToken(accessToken);
+        this.setRefreshToken(refreshToken);
         return this.afterLoginAction(goHome);
       } catch (error) {
         return Promise.reject(error);
@@ -124,15 +174,7 @@ export const useUserStore = defineStore({
     },
     async getUserInfoAction(): Promise<UserInfo | null> {
       if (!this.getToken) return null;
-      const userInfo = await getUserInfo();
-      const { roles = [] } = userInfo;
-      if (isArray(roles)) {
-        const roleList = roles.map((item) => item.value) as RoleEnum[];
-        this.setRoleList(roleList);
-      } else {
-        userInfo.roles = [];
-        this.setRoleList([]);
-      }
+      const userInfo = await getPersonalInfo();
       this.setUserInfo(userInfo);
       return userInfo;
     },
@@ -148,6 +190,7 @@ export const useUserStore = defineStore({
         }
       }
       this.setToken(undefined);
+      this.setRefreshToken(undefined);
       this.setSessionTimeout(false);
       this.setUserInfo(null);
       goLogin && router.push(PageEnum.BASE_LOGIN);

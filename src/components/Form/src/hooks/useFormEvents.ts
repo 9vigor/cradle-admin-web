@@ -39,12 +39,14 @@ export function useFormEvents({
     Object.keys(formModel).forEach((key) => {
       const schema = unref(getSchema).find((item) => item.field === key);
       const isInput = schema?.component && defaultValueComponents.includes(schema.component);
-      formModel[key] = isInput ? defaultValueRef.value[key] || '' : defaultValueRef.value[key];
+      formModel[key] = isInput
+        ? defaultValueRef.value[key] || undefined
+        : defaultValueRef.value[key];
     });
-    nextTick(() => clearValidate());
+    await nextTick(() => clearValidate());
 
     emit('reset', toRaw(formModel));
-    submitOnReset && handleSubmit();
+    submitOnReset && (await handleSubmit());
   }
 
   /**

@@ -13,7 +13,6 @@ export interface CreateAxiosOptions extends AxiosRequestConfig {
 export abstract class AxiosTransform {
   /**
    * @description: Process configuration before request
-   * @description: Process configuration before request
    */
   beforeRequestHook?: (config: AxiosRequestConfig, options: RequestOptions) => AxiosRequestConfig;
 
@@ -48,5 +47,10 @@ export abstract class AxiosTransform {
   /**
    * @description: 请求之后的拦截器错误处理
    */
-  responseInterceptorsCatch?: (axiosInstance: AxiosResponse, error: Error) => void;
+  responseInterceptorsCatch?: (
+    axiosInstance: AxiosResponse,
+    error: Error,
+    isRefreshing: boolean,
+    retryRequests: any[],
+  ) => Promise<any>;
 }

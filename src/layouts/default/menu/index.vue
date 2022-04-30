@@ -26,7 +26,7 @@
       theme: propTypes.oneOf(['light', 'dark']),
 
       splitType: {
-        type: Number as PropType<MenuSplitTyeEnum>,
+        type: String as PropType<MenuSplitTyeEnum>,
         default: MenuSplitTyeEnum.NONE,
       },
 

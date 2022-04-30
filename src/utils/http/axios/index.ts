@@ -1,7 +1,7 @@
 // axios配置  可自行根据项目进行更改，只需更改该文件即可，其他文件可以不动
 // The axios configuration can be changed according to the project, just change the file, other files can be left unchanged
 
-import type { AxiosResponse } from 'axios';
+import type { AxiosInstance, AxiosResponse } from 'axios';
 import { clone } from 'lodash-es';
 import type { RequestOptions, Result } from '/#/axios';
 import type { AxiosTransform, CreateAxiosOptions } from './axiosTransform';
@@ -16,8 +16,10 @@ import { setObjToUrlParams, deepMerge } from '/@/utils';
 import { useErrorLogStoreWithOut } from '/@/store/modules/errorLog';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { joinTimestamp, formatRequestDate } from './helper';
-import { useUserStoreWithOut } from '/@/store/modules/user';
+import { useUserStore, useUserStoreWithOut } from '/@/store/modules/user';
 import { AxiosRetry } from '/@/utils/http/axios/axiosRetry';
+import { refreshToken } from '/@/api/sys/user';
+import { AxiosRequestConfig } from 'axios';
 
 const globSetting = useGlobSetting();
 const urlPrefix = globSetting.urlPrefix;
@@ -43,46 +45,44 @@ const transform: AxiosTransform = {
       return res.data;
     }
     // 错误的时候返回
-
-    const { data } = res;
-    if (!data) {
+    if (!res.data) {
       // return '[HTTP] Request has no return value';
       throw new Error(t('sys.api.apiRequestFailed'));
     }
     //  这里 code，result，message为 后台统一的字段，需要在 types.ts内修改为项目自己的接口返回格式
-    const { code, result, message } = data;
+    const { code, data, msg } = res.data;
 
     // 这里逻辑可以根据项目进行修改
-    const hasSuccess = data && Reflect.has(data, 'code') && code === ResultEnum.SUCCESS;
+    const hasSuccess = res.data && Reflect.has(res.data, 'code') && code === ResultEnum.SUCCESS;
     if (hasSuccess) {
-      return result;
+      return data;
     }
 
     // 在此处根据自己项目的实际情况对不同的code执行不同的操作
     // 如果不希望中断当前请求，请return数据，否则直接抛出异常即可
-    let timeoutMsg = '';
+    let errorMsg = '';
     switch (code) {
-      case ResultEnum.TIMEOUT:
-        timeoutMsg = t('sys.api.timeoutMessage');
+      case ResultEnum.REFRESH_TOKEN_EXPIRED:
+        errorMsg = t('sys.api.timeoutMessage');
         const userStore = useUserStoreWithOut();
         userStore.setToken(undefined);
         userStore.logout(true);
         break;
       default:
-        if (message) {
-          timeoutMsg = message;
+        if (msg) {
+          errorMsg = msg;
         }
     }
 
     // errorMessageMode=‘modal’的时候会显示modal错误弹窗，而不是消息提示，用于一些比较重要的错误
     // errorMessageMode='none' 一般是调用时明确表示不希望自动弹出错误提示
     if (options.errorMessageMode === 'modal') {
-      createErrorModal({ title: t('sys.api.errorTip'), content: timeoutMsg });
+      createErrorModal({ title: t('sys.api.errorTip'), content: errorMsg });
     } else if (options.errorMessageMode === 'message') {
-      createMessage.error(timeoutMsg);
+      createMessage.error(errorMsg);
     }
 
-    throw new Error(timeoutMsg || t('sys.api.apiRequestFailed'));
+    throw new Error(errorMsg || t('sys.api.apiRequestFailed'));
   },
 
   // 请求之前处理config
@@ -140,6 +140,9 @@ const transform: AxiosTransform = {
   requestInterceptors: (config, options) => {
     // 请求之前处理config
     const token = getToken();
+    (config as Recordable).headers['X-Access-Domain'] = window.location.hostname;
+    (config as Recordable).headers['X-Access-Client'] = '0';
+
     if (token && (config as Recordable)?.requestOptions?.withToken !== false) {
       // jwt token
       (config as Recordable).headers.Authorization = options.authenticationScheme
@@ -159,13 +162,19 @@ const transform: AxiosTransform = {
   /**
    * @description: 响应错误处理
    */
-  responseInterceptorsCatch: (axiosInstance: AxiosResponse, error: any) => {
+  responseInterceptorsCatch: (
+    axiosInstance: AxiosResponse,
+    error: any,
+    isRefreshing: boolean,
+    retryRequests: any[],
+  ) => {
     const { t } = useI18n();
     const errorLogStore = useErrorLogStoreWithOut();
     errorLogStore.addAjaxErrorInfo(error);
     const { response, code, message, config } = error || {};
     const errorMessageMode = config?.requestOptions?.errorMessageMode || 'none';
-    const msg: string = response?.data?.error?.message ?? '';
+    const errorCode: string = response?.data?.code ?? '';
+    const msg: string = response?.data?.msg ?? '';
     const err: string = error?.toString?.() ?? '';
     let errMessage = '';
 
@@ -189,6 +198,43 @@ const transform: AxiosTransform = {
       throw new Error(error as unknown as string);
     }
 
+    //token失效自动续期
+    if (errorCode === ResultEnum.TOKEN_EXPIRED) {
+      const userStore = useUserStore();
+      const config = error.config;
+      if (!isRefreshing) {
+        isRefreshing = true;
+        return refreshToken({ refreshToken: userStore.getRefreshToken })
+          .then((res) => {
+            // 重新设置token
+            userStore.setToken(res.accessToken);
+            userStore.setRefreshToken(res.refreshToken);
+            config.headers.Authorization = res.accessToken;
+            // 已经刷新了token，将所有队列中的请求进行重试
+            // @ts-ignore
+            retryRequests.forEach((cb) => cb(res.accessToken));
+            // 重试完清空这个队列
+            retryRequests = [];
+            // @ts-ignore
+            return buildRetryInstance(axiosInstance, config);
+          })
+          .finally(() => {
+            isRefreshing = false;
+          });
+      } else {
+        // 正在刷新token，返回一个未执行resolve的promise
+        return new Promise((resolve) => {
+          // 将resolve放进队列，用一个函数形式来保存，等token刷新后直接执行
+          // @ts-ignore
+          retryRequests.push((token: any) => {
+            config.headers.Authorization = token;
+            // @ts-ignore
+            resolve(buildRetryInstance(axiosInstance, config));
+          });
+        });
+      }
+    }
+
     checkStatus(error?.response?.status, msg, errorMessageMode);
 
     // 添加自动重试机制 保险起见 只针对GET请求
@@ -201,6 +247,10 @@ const transform: AxiosTransform = {
     return Promise.reject(error);
   },
 };
+
+function buildRetryInstance(axiosInstance: AxiosInstance, config: AxiosRequestConfig) {
+  return axiosInstance(config);
+}
 
 function createAxios(opt?: Partial<CreateAxiosOptions>) {
   return new VAxios(
@@ -245,7 +295,7 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
           withToken: true,
           retryRequest: {
             isOpenRetry: true,
-            count: 5,
+            count: 0,
             waitTime: 100,
           },
         },

@@ -1,14 +1,56 @@
 import { defHttp } from '/@/utils/http/axios';
-import { getMenuListResultModel } from './model/menuModel';
+import { MenuParams, MenuResultModel, MenuTreeResultModel, UserResources } from './model/menuModel';
+import { ContentTypeEnum } from '/@/enums/httpEnum';
 
 enum Api {
-  GetMenuList = '/getMenuList',
+  GetUserResources = '/system/user/resources',
+  GetMenuList = '/system/menu/query',
+  GetMenuTree = '/system/menu/tree',
+  SaveMenu = '/system/menu/save',
+  UpdateMenu = '/system/menu/update',
+  DeleteMenu = '/system/menu/delete',
 }
 
 /**
- * @description: Get user menu based on id
+ * @description: getUserResources
  */
+export function getUserResources() {
+  return defHttp.get<UserResources>({ url: Api.GetUserResources }, { errorMessageMode: 'message' });
+}
 
-export const getMenuList = () => {
-  return defHttp.get<getMenuListResultModel>({ url: Api.GetMenuList });
-};
+/**
+ * @description: getMenuList
+ */
+export function getMenuList() {
+  return defHttp.get<MenuResultModel>({ url: Api.GetMenuList }, { errorMessageMode: 'message' });
+}
+
+export function getMenuTree(parentId) {
+  return defHttp.post<MenuTreeResultModel>(
+    {
+      url: Api.GetMenuTree,
+      headers: { 'Content-Type': ContentTypeEnum.FORM_URLENCODED },
+      params: { parentId },
+    },
+    { errorMessageMode: 'message' },
+  );
+}
+
+export function saveMenu(params: MenuParams) {
+  return defHttp.post({ url: Api.SaveMenu, params }, { errorMessageMode: 'message' });
+}
+
+export function updateMenu(params: MenuParams) {
+  return defHttp.post({ url: Api.UpdateMenu, params }, { errorMessageMode: 'message' });
+}
+
+export function deleteMenu(id: number) {
+  return defHttp.delete(
+    {
+      url: Api.DeleteMenu,
+      headers: { 'Content-Type': ContentTypeEnum.FORM_URLENCODED },
+      params: { id },
+    },
+    { errorMessageMode: 'message' },
+  );
+}

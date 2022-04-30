@@ -10,19 +10,15 @@ import { transformObjToRoute, flatMultiLevelRoutes } from '/@/router/helper/rout
 import { transformRouteToMenu } from '/@/router/helper/menuHelper';
 
 import projectSetting from '/@/settings/projectSetting';
-
 import { PermissionModeEnum } from '/@/enums/appEnum';
-
 import { asyncRoutes } from '/@/router/routes';
 import { ERROR_LOG_ROUTE, PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
-
 import { filter } from '/@/utils/helper/treeHelper';
-
-import { getMenuList } from '/@/api/sys/menu';
-import { getPermCode } from '/@/api/sys/user';
-
+import { getUserResources } from '/@/api/sys/menu';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { PageEnum } from '/@/enums/pageEnum';
+import { isArray } from '/@/utils/is';
+import { RoleEnum } from '/@/enums/roleEnum';
 
 interface PermissionState {
   // Permission code list
@@ -92,16 +88,20 @@ export const usePermissionStore = defineStore({
       this.backMenuList = [];
       this.lastBuildMenuTime = 0;
     },
-    async changePermissionCode() {
-      const codeList = await getPermCode();
-      this.setPermCodeList(codeList);
-    },
     async buildRoutesAction(): Promise<AppRouteRecordRaw[]> {
       const { t } = useI18n();
       const userStore = useUserStore();
       const appStore = useAppStoreWithOut();
-
       let routes: AppRouteRecordRaw[] = [];
+
+      const userResources = await getUserResources();
+
+      if (isArray(userResources.roles)) {
+        const roleList = userResources.roles.map((item) => item) as RoleEnum[];
+        userStore.setRoleList(roleList);
+      } else {
+        userStore.setRoleList([]);
+      }
       const roleList = toRaw(userStore.getRoleList) || [];
       const { permissionMode = projectSetting.permissionMode } = appStore.getProjectConfig;
 
@@ -184,8 +184,8 @@ export const usePermissionStore = defineStore({
           // this function may only need to be executed once, and the actual project can be put at the right time by itself
           let routeList: AppRouteRecordRaw[] = [];
           try {
-            this.changePermissionCode();
-            routeList = (await getMenuList()) as AppRouteRecordRaw[];
+            this.setPermCodeList(userResources.permissions);
+            routeList = userResources.routes as AppRouteRecordRaw[];
           } catch (error) {
             console.error(error);
           }

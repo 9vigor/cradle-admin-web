@@ -4,7 +4,7 @@
       <img :class="`${prefixCls}__header`" :src="getUserInfo.avatar" />
       <span :class="`${prefixCls}__info hidden md:block`">
         <span :class="`${prefixCls}__name  `" class="truncate">
-          {{ getUserInfo.realName }}
+          {{ getUserInfo.name }}
         </span>
       </span>
     </span>
@@ -18,6 +18,11 @@
           v-if="getShowDoc"
         />
         <MenuDivider v-if="getShowDoc" />
+        <MenuItem
+          key="userCenter"
+          :text="t('layout.header.tooltipPersonalCenter')"
+          icon="ion:person-outline"
+        />
         <MenuItem
           v-if="getUseLockPage"
           key="lock"
@@ -33,6 +38,7 @@
     </template>
   </Dropdown>
   <LockAction @register="register" />
+  <UserCenter @register="registerUserCenterModal" />
 </template>
 <script lang="ts">
   // components
@@ -53,8 +59,9 @@
   import { openWindow } from '/@/utils';
 
   import { createAsyncComponent } from '/@/utils/factory/createAsyncComponent';
+  import { getPersonalInfo } from '/@/api/sys/user';
 
-  type MenuEvent = 'logout' | 'doc' | 'lock';
+  type MenuEvent = 'logout' | 'doc' | 'lock' | 'userCenter';
 
   export default defineComponent({
     name: 'UserDropdown',
@@ -64,6 +71,7 @@
       MenuItem: createAsyncComponent(() => import('./DropMenuItem.vue')),
       MenuDivider: Menu.Divider,
       LockAction: createAsyncComponent(() => import('../lock/LockModal.vue')),
+      UserCenter: createAsyncComponent(() => import('../user-center/UserCenterModal.vue')),
     },
     props: {
       theme: propTypes.oneOf(['dark', 'light']),
@@ -75,11 +83,13 @@
       const userStore = useUserStore();
 
       const getUserInfo = computed(() => {
-        const { realName = '', avatar, desc } = userStore.getUserInfo || {};
-        return { realName, avatar: avatar || headerImg, desc };
+        const { name = '', avatar, desc } = userStore.getUserInfo || {};
+        return { name, avatar: avatar || headerImg, desc };
       });
 
       const [register, { openModal }] = useModal();
+
+      const [registerUserCenterModal, { openModal: openUserCenterModal }] = useModal();
 
       function handleLock() {
         openModal(true);
@@ -95,6 +105,13 @@
         openWindow(DOC_URL);
       }
 
+      // open doc
+      function handleUserCenter() {
+        getPersonalInfo().then((data) => {
+          openUserCenterModal(true, { record: data });
+        });
+      }
+
       function handleMenuClick(e: { key: MenuEvent }) {
         switch (e.key) {
           case 'logout':
@@ -106,6 +123,9 @@
           case 'lock':
             handleLock();
             break;
+          case 'userCenter':
+            handleUserCenter();
+            break;
         }
       }
 
@@ -116,6 +136,7 @@
         handleMenuClick,
         getShowDoc,
         register,
+        registerUserCenterModal,
         getUseLockPage,
       };
     },

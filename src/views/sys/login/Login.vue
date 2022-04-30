@@ -37,6 +37,8 @@
             <LoginForm />
             <ForgetPasswordForm />
             <RegisterForm />
+            <GoogleBindForm />
+            <GoogleVerifyForm />
             <MobileForm />
             <QrCodeForm />
           </div>
@@ -58,13 +60,14 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useLocaleStore } from '/@/store/modules/locale';
+  import GoogleBindForm from '/@/views/sys/login/GoogleBindForm.vue';
+  import GoogleVerifyForm from '/@/views/sys/login/GoogleVerifyForm.vue';
 
   defineProps({
     sessionTimeout: {
       type: Boolean,
     },
   });
-
   const globSetting = useGlobSetting();
   const { prefixCls } = useDesign('login');
   const { t } = useI18n();

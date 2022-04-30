@@ -29,6 +29,7 @@ export function checkStatus(
     // Return to the current page after successful login. This step needs to be operated on the login page.
     case 401:
       userStore.setToken(undefined);
+      userStore.setRefreshToken(undefined);
       errMessage = msg || t('sys.api.errMsg401');
       if (stp === SessionTimeoutProcessingEnum.PAGE_COVERAGE) {
         userStore.setSessionTimeout(true);
@@ -48,6 +49,9 @@ export function checkStatus(
       break;
     case 408:
       errMessage = t('sys.api.errMsg408');
+      break;
+    case 412:
+      errMessage = t('sys.api.errMsg412');
       break;
     case 500:
       errMessage = t('sys.api.errMsg500');
