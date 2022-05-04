@@ -79,7 +79,6 @@ export const columns: BasicColumn[] = [
     title: '操作时间',
     dataIndex: 'createTime',
     ellipsis: true,
-    sorter: true,
   },
 ];
 

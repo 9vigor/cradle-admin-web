@@ -158,3 +158,9 @@ export const localeDict: Dict[] = [
   { value: 'AMERICA', label: '美国' },
 ];
 export const localeDictMap = dict2Map(localeDict);
+
+export const whetherDict: Dict[] = [
+  { value: 'YES', label: '是' },
+  { value: 'NO', label: '否' },
+];
+export const whetherDictMap = dict2Map(whetherDict);

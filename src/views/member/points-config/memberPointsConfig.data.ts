@@ -6,47 +6,47 @@ export const columns: BasicColumn[] = [
   {
     title: t('member.pointsConfig.usuallyRechargeRatio'),
     dataIndex: 'usuallyRechargeRatio',
-    ellipsis: true,
+    width: 200,
   },
   {
     title: t('member.pointsConfig.specialRechargeRatio'),
     dataIndex: 'specialRechargeRatio',
-    ellipsis: true,
+    width: 200,
   },
   {
     title: t('member.pointsConfig.birthdayRechargeRatio'),
     dataIndex: 'birthdayRechargeRatio',
-    ellipsis: true,
+    width: 220,
   },
   {
     title: t('member.pointsConfig.usuallyExchangeRatio'),
     dataIndex: 'usuallyExchangeRatio',
-    ellipsis: true,
+    width: 200,
   },
   {
     title: t('member.pointsConfig.specialExchangeRatio'),
     dataIndex: 'specialExchangeRatio',
-    ellipsis: true,
+    width: 200,
   },
   {
     title: t('member.pointsConfig.birthdayExchangeRatio'),
     dataIndex: 'birthdayExchangeRatio',
-    ellipsis: true,
+    width: 200,
   },
   {
     title: t('member.pointsConfig.usuallyConsumeRatio'),
     dataIndex: 'usuallyConsumeRatio',
-    ellipsis: true,
+    width: 230,
   },
   {
     title: t('member.pointsConfig.specialConsumeRatio'),
     dataIndex: 'specialConsumeRatio',
-    ellipsis: true,
+    width: 230,
   },
   {
     title: t('member.pointsConfig.birthdayConsumeRatio'),
     dataIndex: 'birthdayConsumeRatio',
-    ellipsis: true,
+    width: 230,
   },
 ];
 

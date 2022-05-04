@@ -42,7 +42,6 @@ export const columns: BasicColumn[] = [
   {
     title: '修改时间',
     dataIndex: 'updateTime',
-    sorter: true,
   },
 ];
 

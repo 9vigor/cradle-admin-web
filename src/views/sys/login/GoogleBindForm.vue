@@ -43,14 +43,12 @@
   import { useLoginState, LoginStateEnum, useFormRules, useFormValid } from './useLogin';
   import { useUserStore } from '/@/store/modules/user';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { useDesign } from '/@/hooks/web/useDesign';
 
   const FormItem = Form.Item;
   const { t } = useI18n();
   const userStore = useUserStore();
   const { getFormRules } = useFormRules();
-  const { notification, createErrorModal } = useMessage();
-  const { prefixCls } = useDesign('google-bind');
+  const { notification } = useMessage();
   const loading = ref(false);
   const formRef = ref();
   const { validForm } = useFormValid(formRef);
@@ -70,7 +68,7 @@
       const userInfo = await userStore.login({
         verifyToken: data.verifyToken,
         googleCode: data.googleCode,
-        mode: 'none',
+        mode: 'message',
       });
       if (userInfo) {
         notification.success({
@@ -82,11 +80,7 @@
       userStore.setVerifyToken('');
       userStore.setGoogleQrUrl('');
     } catch (error) {
-      createErrorModal({
-        title: t('sys.api.errorTip'),
-        content: (error as unknown as Error).message || t('sys.api.networkExceptionMsg'),
-        getContainer: () => document.body.querySelector(`.${prefixCls}`) || document.body,
-      });
+      console.error((error as unknown as Error).message || t('sys.api.networkExceptionMsg'));
     } finally {
       loading.value = false;
     }
