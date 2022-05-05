@@ -140,7 +140,7 @@ const transform: AxiosTransform = {
   requestInterceptors: (config, options) => {
     // 请求之前处理config
     const token = getToken();
-    (config as Recordable).headers['X-Access-Domain'] = window.location.hostname;
+    (config as Recordable).headers['X-Access-Domain'] = window.location.hostname || 'localhost';
     (config as Recordable).headers['X-Access-Client'] = '0';
 
     if (token && (config as Recordable)?.requestOptions?.withToken !== false) {
