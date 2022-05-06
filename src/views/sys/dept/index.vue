@@ -2,7 +2,9 @@
   <div>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> {{ t('common.createText') }} </a-button>
+        <a-button type="primary" @click="handleCreate" v-if="hasPermission('sys:dept:save')">
+          {{ t('common.createText') }}
+        </a-button>
       </template>
       <template #action="{ record }">
         <TableAction
@@ -11,11 +13,13 @@
               icon: 'clarity:note-edit-line',
               tooltip: t('common.editText'),
               onClick: handleEdit.bind(null, record),
+              ifShow: hasPermission('sys:dept:update'),
             },
             {
               icon: 'ant-design:delete-outlined',
               color: 'error',
               tooltip: t('common.delText'),
+              ifShow: hasPermission('sys:dept:delete'),
               popConfirm: {
                 title: t('common.delTip'),
                 confirm: handleDelete.bind(null, record),
@@ -39,12 +43,14 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { deleteDept, getDeptList } from '/@/api/sys/dept';
   import { useDrawer } from '/@/components/Drawer';
+  import { usePermission } from '/@/hooks/web/usePermission';
 
   export default defineComponent({
     name: 'DeptManagement',
     components: { BasicTable, DeptDrawer, TableAction },
     setup() {
       const { t } = useI18n();
+      const { hasPermission } = usePermission();
       const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerTable, { reload }] = useTable({
         title: '部门列表',
@@ -94,6 +100,7 @@
 
       return {
         t,
+        hasPermission,
         registerTable,
         registerDrawer,
         handleCreate,

@@ -3,8 +3,10 @@
     <DeptTree class="w-1/4 xl:w-1/5" @select="handleSelect" />
     <BasicTable @register="registerTable" class="w-3/4 xl:w-4/5" :searchInfo="searchInfo">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate">{{ t('common.createText') }}</a-button>
-        <a-button type="primary" @click="handleUnlockModal">
+        <a-button type="primary" @click="handleCreate" v-if="hasPermission('sys:user:save')">{{
+          t('common.createText')
+        }}</a-button>
+        <a-button type="primary" @click="handleUnlockModal" v-if="hasPermission('sys:user:unlock')">
           {{ t('sys.user.unlock') }}
         </a-button>
       </template>
@@ -31,7 +33,9 @@
           }}
         </Tag>
         <Divider type="vertical" />
-        <a @click="handleGoogleSecret(record)">{{ t('common.detailText') }}</a>
+        <a @click="handleGoogleSecret(record)" v-if="hasPermission('sys:user:google-secret')">{{
+          t('common.detailText')
+        }}</a>
       </template>
       <template #action="{ record }">
         <TableAction
@@ -45,11 +49,13 @@
               icon: 'clarity:note-edit-line',
               tooltip: t('common.editText'),
               onClick: handleEdit.bind(null, record),
+              ifShow: hasPermission('sys:user:update'),
             },
             {
               icon: 'ant-design:delete-outlined',
               color: 'error',
               tooltip: t('common.delText'),
+              ifShow: hasPermission('sys:user:delete'),
               popConfirm: {
                 title: t('common.delTip'),
                 confirm: handleDelete.bind(null, record),
@@ -83,6 +89,7 @@
   import { StatusEnum } from '/@/enums/commonEnum';
   import UnlockModal from '/@/views/sys/user/UnlockModal.vue';
   import { useI18n } from '/@/hooks/web/useI18n';
+  import { usePermission } from '/@/hooks/web/usePermission';
 
   export default defineComponent({
     name: 'UserManagement',
@@ -101,6 +108,7 @@
     setup() {
       const go = useGo();
       const { t } = useI18n();
+      const { hasPermission } = usePermission();
       const [unlockModal, { openModal: openUnlockModal }] = useModal();
       const [qrModal, { openModal }] = useModal();
       const [registerDrawer, { openDrawer }] = useDrawer();
@@ -174,6 +182,7 @@
 
       return {
         t,
+        hasPermission,
         registerTable,
         qrModal,
         unlockModal,

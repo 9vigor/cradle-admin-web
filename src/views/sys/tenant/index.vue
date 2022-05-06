@@ -2,7 +2,9 @@
   <div>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> {{ t('common.createText') }} </a-button>
+        <a-button type="primary" @click="handleCreate" v-if="hasPermission('sys:tenant:save')">
+          {{ t('common.createText') }}
+        </a-button>
       </template>
       <template #action="{ record }">
         <TableAction
@@ -11,11 +13,13 @@
               icon: 'clarity:note-edit-line',
               tooltip: t('common.editText'),
               onClick: handleEdit.bind(null, record),
+              ifShow: hasPermission('sys:tenant:update'),
             },
             {
               icon: 'ant-design:delete-outlined',
               tooltip: t('common.delText'),
               color: 'error',
+              ifShow: hasPermission('sys:tenant:delete'),
               popConfirm: {
                 title: t('common.delTip'),
                 confirm: handleDelete.bind(null, record),
@@ -39,12 +43,14 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import TenantDrawer from '/@/views/sys/tenant/TenantDrawer.vue';
   import { getTenantList, deleteTenant } from '/@/api/sys/tenant';
+  import { usePermission } from '/@/hooks/web/usePermission';
 
   export default defineComponent({
     name: 'TenantManagement',
     components: { BasicTable, TableAction, TenantDrawer },
     setup() {
       const { t } = useI18n();
+      const { hasPermission } = usePermission();
       const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerTable, { reload }] = useTable({
         title: '租户列表',
@@ -90,6 +96,7 @@
 
       return {
         t,
+        hasPermission,
         registerTable,
         registerDrawer,
         handleCreate,

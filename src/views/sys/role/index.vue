@@ -2,7 +2,9 @@
   <div>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> {{ t('common.createText') }} </a-button>
+        <a-button type="primary" @click="handleCreate" v-if="hasPermission('sys:role:save')">
+          {{ t('common.createText') }}
+        </a-button>
       </template>
       <template #action="{ record }">
         <TableAction
@@ -11,16 +13,19 @@
               icon: 'clarity:assign-user-line',
               tooltip: t('sys.role.assign'),
               onClick: handleAssign.bind(null, record),
+              ifShow: hasPermission('sys:role:assign'),
             },
             {
               icon: 'clarity:note-edit-line',
               tooltip: t('common.editText'),
               onClick: handleEdit.bind(null, record),
+              ifShow: hasPermission('sys:role:update'),
             },
             {
               icon: 'ant-design:delete-outlined',
               tooltip: t('common.delText'),
               color: 'error',
+              ifShow: hasPermission('sys:role:delete'),
               popConfirm: {
                 title: t('common.delTip'),
                 confirm: handleDelete.bind(null, record),
@@ -46,12 +51,14 @@
   import { deleteRole, getRoleList } from '/@/api/sys/role';
   import { useI18n } from '/@/hooks/web/useI18n';
   import RoleAssignDrawer from '/@/views/sys/role/RoleAssignDrawer.vue';
+  import { usePermission } from '/@/hooks/web/usePermission';
 
   export default defineComponent({
     name: 'RoleManagement',
     components: { BasicTable, TableAction, RoleDrawer, RoleAssignDrawer },
     setup() {
       const { t } = useI18n();
+      const { hasPermission } = usePermission();
       const [roleAssignDrawer, { openDrawer: openRoleAssignDrawer }] = useDrawer();
       const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerTable, { reload }] = useTable({
@@ -105,6 +112,7 @@
 
       return {
         t,
+        hasPermission,
         registerTable,
         roleAssignDrawer,
         openRoleAssignDrawer,
