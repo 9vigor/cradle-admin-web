@@ -12,29 +12,27 @@
     <br />
     <div style="text-align: center">
       <a-button
-        v-auth="'sys:user:reset-google-secret'"
+        v-if="hasPermission('sys:user:reset-google-secret')"
         class="mb-2"
         type="primary"
         @click="resetSecret"
       >
         {{ t('sys.user.google.reset') }}
       </a-button>
-      <Divider v-auth="'sys:user:google-verify'" type="vertical" />
+      <Divider v-if="hasPermission('sys:user:google-verify')" type="vertical" />
       <a-button
-        v-auth="'sys:user:google-verify'"
         class="mb-2"
         type="primary"
         @click="openVerify"
-        v-if="!rowRecord.googleVerify"
+        v-if="!rowRecord.googleVerify && hasPermission('sys:user:google-verify')"
       >
         {{ t('sys.user.google.openVerify') }}
       </a-button>
       <a-button
-        v-auth="'sys:user:google-verify'"
         class="mb-2"
         type="primary"
         @click="closeVerify"
-        v-if="rowRecord.googleVerify"
+        v-if="rowRecord.googleVerify && hasPermission('sys:user:google-verify')"
       >
         {{ t('sys.user.google.closeVerify') }}
       </a-button>
@@ -55,6 +53,7 @@
     resetGoogleSecret,
   } from '/@/api/sys/user';
   import { useI18n } from '/@/hooks/web/useI18n';
+  import { usePermission } from '/@/hooks/web/usePermission';
 
   export default defineComponent({
     name: 'QrModal',
@@ -62,6 +61,7 @@
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const { t } = useI18n();
+      const { hasPermission } = usePermission();
       const rowRecord = ref<Recordable>({});
       const { createMessage } = useMessage();
 
@@ -120,6 +120,7 @@
 
       return {
         t,
+        hasPermission,
         rowRecord,
         qrModal,
         resetSecret,

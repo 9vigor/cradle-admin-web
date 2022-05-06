@@ -2,7 +2,9 @@
   <div>
     <BasicTable @register="registerTable" @fetch-success="onFetchSuccess">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> {{ t('sys.menu.create') }} </a-button>
+        <a-button type="primary" @click="handleCreate" v-if="hasPermission('sys:menu:save')">
+          {{ t('sys.menu.create') }}
+        </a-button>
       </template>
       <template #action="{ record }">
         <TableAction
@@ -11,11 +13,13 @@
               icon: 'clarity:note-edit-line',
               tooltip: t('common.editText'),
               onClick: handleEdit.bind(null, record),
+              ifShow: hasPermission('sys:menu:update'),
             },
             {
               icon: 'ant-design:delete-outlined',
               tooltip: t('common.delText'),
               color: 'error',
+              ifShow: hasPermission('sys:menu:delete'),
               popConfirm: {
                 title: t('sys.menu.delete'),
                 confirm: handleDelete.bind(null, record),
@@ -39,11 +43,13 @@
   import { columns, searchFormSchema } from './menu.data';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { deleteMenu, getMenuList } from '/@/api/sys/menu';
+  import { usePermission } from '/@/hooks/web/usePermission';
   export default defineComponent({
     name: 'MenuManagement',
     components: { BasicTable, MenuDrawer, TableAction },
     setup() {
       const { t } = useI18n();
+      const { hasPermission } = usePermission();
       const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerTable, { reload }] = useTable({
         api: getMenuList,
@@ -94,6 +100,7 @@
 
       return {
         t,
+        hasPermission,
         registerTable,
         registerDrawer,
         handleCreate,

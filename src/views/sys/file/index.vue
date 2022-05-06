@@ -8,6 +8,7 @@
           :api="uploadApi"
           class="my-5"
           :emptyHidePreview="true"
+          v-if="hasPermission('sys:file:upload')"
         />
       </template>
       <template #action="{ record }">
@@ -17,16 +18,19 @@
               icon: 'clarity:eye-line',
               tooltip: t('common.previewText'),
               onClick: handlePreview.bind(null, record),
+              ifShow: hasPermission('sys:file:download'),
             },
             {
               icon: 'clarity:download-line',
               tooltip: t('common.downloadText'),
               onClick: handleDownload.bind(null, record),
+              ifShow: hasPermission('sys:file:download'),
             },
             {
               icon: 'ant-design:delete-outlined',
               color: 'error',
               tooltip: t('common.delText'),
+              ifShow: hasPermission('sys:file:delete'),
               popConfirm: {
                 title: t('common.delTip'),
                 confirm: handleDelete.bind(null, record),
@@ -49,12 +53,14 @@
   import { columns, searchFormSchema } from './file.data';
   import { downloadByData } from '/@/utils/file/download';
   import { createImgPreview } from '/@/components/Preview';
+  import { usePermission } from '/@/hooks/web/usePermission';
 
   export default defineComponent({
     name: 'FileManagement',
     components: { BasicTable, TableAction, BasicUpload },
     setup() {
       const { t } = useI18n();
+      const { hasPermission } = usePermission();
       const [registerTable, { reload }] = useTable({
         api: getFileList,
         columns,
@@ -102,6 +108,7 @@
 
       return {
         t,
+        hasPermission,
         uploadApi,
         registerTable,
         handleDownload,

@@ -10,8 +10,15 @@
       @fetch-success="onFetchSuccess"
     >
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> {{ t('common.createText') }} </a-button>
-        <a-button type="primary" @click="handleGenerateBatch" :disabled="checkedKeys.length === 0">
+        <a-button type="primary" @click="handleCreate" v-if="hasPermission('sys:gen:save')">
+          {{ t('common.createText') }}
+        </a-button>
+        <a-button
+          type="primary"
+          @click="handleGenerateBatch"
+          :disabled="checkedKeys.length === 0"
+          v-if="hasPermission('sys:gen:generate')"
+        >
           {{ t('sys.codegen.batchGenerate') }}
         </a-button>
       </template>
@@ -22,11 +29,13 @@
               icon: 'clarity:note-edit-line',
               tooltip: t('common.editText'),
               onClick: handleEdit.bind(null, record),
+              ifShow: hasPermission('sys:gen:update'),
             },
             {
               icon: 'ant-design:delete-outlined',
               tooltip: t('common.delText'),
               color: 'error',
+              ifShow: hasPermission('sys:gen:delete'),
               popConfirm: {
                 title: t('common.delTip'),
                 confirm: handleDelete.bind(null, record),
@@ -36,6 +45,7 @@
               icon: 'clarity:export-line',
               tooltip: t('sys.codegen.generate'),
               onClick: handleGenerate.bind(null, record),
+              ifShow: hasPermission('sys:gen:generate'),
             },
           ]"
         />
@@ -63,11 +73,13 @@
   } from '/@/api/sys/codegen';
   import { downloadByData } from '/@/utils/file/download';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { usePermission } from '/@/hooks/web/usePermission';
   export default defineComponent({
     name: 'CodegenManagement',
     components: { BasicTable, CodegenDrawer, TableAction },
     setup() {
       const { t } = useI18n();
+      const { hasPermission } = usePermission();
       const { createMessage } = useMessage();
       const checkedKeys = ref<Array<string | number>>([]);
       const [registerDrawer, { openDrawer }] = useDrawer();
@@ -159,6 +171,7 @@
 
       return {
         t,
+        hasPermission,
         checkedKeys,
         registerTable,
         registerDrawer,
