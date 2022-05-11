@@ -19,13 +19,19 @@
               icon: 'clarity:note-edit-line',
               tooltip: t('common.editText'),
               onClick: handleEdit.bind(null, record),
-              ifShow: hasPermission('sys:role:update'),
+              ifShow:
+                hasPermission('sys:role:update') &&
+                record.code !== 'ADMIN' &&
+                record.code !== 'MEMBER',
             },
             {
               icon: 'ant-design:delete-outlined',
               tooltip: t('common.delText'),
               color: 'error',
-              ifShow: hasPermission('sys:role:delete'),
+              ifShow:
+                hasPermission('sys:role:delete') &&
+                record.code !== 'ADMIN' &&
+                record.code !== 'MEMBER',
               popConfirm: {
                 title: t('common.delTip'),
                 confirm: handleDelete.bind(null, record),
