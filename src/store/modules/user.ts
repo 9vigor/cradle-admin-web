@@ -20,6 +20,7 @@ import { usePermissionStore } from '/@/store/modules/permission';
 import { RouteRecordRaw } from 'vue-router';
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 import { h } from 'vue';
+import detailRoutes from '/@/router/routes/detail';
 
 interface UserState {
   userInfo: Nullable<UserInfo>;
@@ -164,6 +165,9 @@ export const useUserStore = defineStore({
           const routes = await permissionStore.buildRoutesAction();
           routes.forEach((route) => {
             router.addRoute(route as unknown as RouteRecordRaw);
+          });
+          detailRoutes.forEach((route) => {
+            router.addRoute(route as RouteRecordRaw);
           });
           router.addRoute(PAGE_NOT_FOUND_ROUTE as unknown as RouteRecordRaw);
           permissionStore.setDynamicAddedRoute(true);

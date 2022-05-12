@@ -146,6 +146,7 @@ export default {
     confirmPassword: '确认密码',
     deptName: '所属部门',
     googleSecret: '谷歌密钥',
+    detail: '用户详情',
     google: {
       title: '谷歌密钥',
       bound: '已绑定',

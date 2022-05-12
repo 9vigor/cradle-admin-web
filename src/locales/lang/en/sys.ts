@@ -152,6 +152,7 @@ export default {
     confirmPassword: 'Confirm Password',
     deptName: 'Department',
     googleSecret: 'Google Secret',
+    detail: 'User Detail',
     google: {
       title: 'Google Secret',
       bound: 'Bound',

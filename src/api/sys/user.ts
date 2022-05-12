@@ -17,6 +17,7 @@ enum Api {
   RefreshToken = '/system/admin/token/refresh',
   Logout = '/system/admin/logout',
   GetUserList = '/system/user/query',
+  GetUserById = '/system/user/query/',
   SaveUser = '/system/user/save',
   UpdateUser = '/system/user/update',
   DeleteUser = '/system/user/delete',
@@ -88,6 +89,10 @@ export function doLogout() {
 
 export function getUserList(params) {
   return defHttp.post({ url: Api.GetUserList, params: params }, { errorMessageMode: 'message' });
+}
+
+export function getUserById(id) {
+  return defHttp.get({ url: Api.GetUserById + id }, { errorMessageMode: 'message' });
 }
 
 export function saveUser(params) {

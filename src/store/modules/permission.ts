@@ -19,6 +19,7 @@ import { useMessage } from '/@/hooks/web/useMessage';
 import { PageEnum } from '/@/enums/pageEnum';
 import { isArray } from '/@/utils/is';
 import { RoleEnum } from '/@/enums/roleEnum';
+import detailRoutes from '/@/router/routes/detail';
 
 interface PermissionState {
   // Permission code list
@@ -202,7 +203,7 @@ export const usePermissionStore = defineStore({
           routeList = routeList.filter(routeRemoveIgnoreFilter);
 
           routeList = flatMultiLevelRoutes(routeList);
-          routes = [PAGE_NOT_FOUND_ROUTE, ...routeList];
+          routes = [PAGE_NOT_FOUND_ROUTE, ...detailRoutes, ...routeList];
           break;
       }
 
