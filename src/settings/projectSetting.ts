@@ -30,7 +30,7 @@ const setting: ProjectConfig = {
   permissionCacheType: CacheTypeEnum.LOCAL,
 
   // Session timeout processing
-  sessionTimeoutProcessing: SessionTimeoutProcessingEnum.ROUTE_JUMP,
+  sessionTimeoutProcessing: SessionTimeoutProcessingEnum.PAGE_COVERAGE,
 
   // color
   themeColor: primaryColor,
@@ -152,7 +152,7 @@ const setting: ProjectConfig = {
   openKeepAlive: true,
 
   // Automatic screen lock time, 0 does not lock the screen. Unit minute default 0
-  lockTime: 0,
+  lockTime: 5,
 
   // Whether to show breadcrumbs
   showBreadCrumb: true,
