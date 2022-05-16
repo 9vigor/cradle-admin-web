@@ -7,10 +7,10 @@ import { ContentTypeEnum } from '/@/enums/httpEnum';
 const { uploadUrl = '' } = useGlobSetting();
 
 enum Api {
-  GetFileInfoApi = '/system/file/info',
-  GetFileList = '/system/file/query',
-  DownloadFile = '/system/file/download',
-  DeleteFile = '/system/file/delete',
+  GetFileInfoApi = '/sys/file/info',
+  GetFileList = '/sys/file/query',
+  DownloadFile = '/sys/file/download',
+  DeleteFile = '/sys/file/delete',
 }
 
 /**

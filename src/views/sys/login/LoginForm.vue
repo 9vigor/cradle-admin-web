@@ -100,7 +100,7 @@
   import { useUserStore } from '/@/store/modules/user';
   import { LoginStateEnum, useLoginState, useFormRules, useFormValid } from './useLogin';
   import { useDesign } from '/@/hooks/web/useDesign';
-  //import { onKeyStroke } from '@vueuse/core';
+  import { onKeyStroke } from '@vueuse/core';
 
   const ACol = Col;
   const ARow = Row;
@@ -125,7 +125,7 @@
 
   const { validForm } = useFormValid(formRef);
 
-  //onKeyStroke('Enter', handleLogin);
+  onKeyStroke('Enter', handleLogin);
 
   const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN);
   async function handleLogin() {
@@ -136,7 +136,7 @@
       const verifyResult = await userStore.verify({
         password: data.password,
         username: data.account,
-        mode: 'message', //不要默认的错误提示
+        mode: 'message',
       });
       if (verifyResult) {
         if (verifyResult.googleVerify) {

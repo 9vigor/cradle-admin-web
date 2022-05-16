@@ -2,15 +2,15 @@ import { defHttp } from '/@/utils/http/axios';
 import { ContentTypeEnum } from '/@/enums/httpEnum';
 
 enum Api {
-  GetAllRoleList = '/system/role/query',
-  GetRoleList = '/system/role/query',
-  GetRoleById = '/system/role/query/',
-  SaveRole = '/system/role/save',
-  UpdateRole = '/system/role/update',
-  DeleteRole = '/system/role/delete',
-  CheckCode = '/system/role/code/check',
-  CheckName = '/system/role/name/check',
-  Assign = '/system/role/assign',
+  GetAllRoleList = '/sys/role/query',
+  GetRoleList = '/sys/role/query',
+  GetRoleById = '/sys/role/query/',
+  SaveRole = '/sys/role/save',
+  UpdateRole = '/sys/role/update',
+  DeleteRole = '/sys/role/delete',
+  CheckCode = '/sys/role/code/check',
+  CheckName = '/sys/role/name/check',
+  Assign = '/sys/role/assign',
 }
 
 export function getAllRoleList() {

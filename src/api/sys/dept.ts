@@ -2,12 +2,12 @@ import { defHttp } from '/@/utils/http/axios';
 import { ContentTypeEnum } from '/@/enums/httpEnum';
 
 enum Api {
-  GetDeptTree = '/system/dept/tree',
-  GetDeptList = '/system/dept/query',
-  SaveDept = '/system/dept/save',
-  UpdateDept = '/system/dept/update',
-  DeleteDept = '/system/dept/delete',
-  CheckName = '/system/dept/name/check',
+  GetDeptTree = '/sys/dept/tree',
+  GetDeptList = '/sys/dept/query',
+  SaveDept = '/sys/dept/save',
+  UpdateDept = '/sys/dept/update',
+  DeleteDept = '/sys/dept/delete',
+  CheckName = '/sys/dept/name/check',
 }
 
 export function getDeptTree(parentId = 0) {

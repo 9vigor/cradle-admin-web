@@ -16,6 +16,7 @@ export default {
   searchText: 'Search',
   queryText: 'Search',
   operateText: 'Operate',
+  syncText: 'Sync',
 
   inputText: 'Please enter',
   chooseText: 'Please choose',

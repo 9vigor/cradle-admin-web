@@ -3,12 +3,12 @@ import { MenuParams, MenuResultModel, MenuTreeResultModel, UserResources } from 
 import { ContentTypeEnum } from '/@/enums/httpEnum';
 
 enum Api {
-  GetUserResources = '/system/user/resources',
-  GetMenuList = '/system/menu/query',
-  GetMenuTree = '/system/menu/tree',
-  SaveMenu = '/system/menu/save',
-  UpdateMenu = '/system/menu/update',
-  DeleteMenu = '/system/menu/delete',
+  GetUserResources = '/sys/user/resources',
+  GetMenuList = '/sys/menu/query',
+  GetMenuTree = '/sys/menu/tree',
+  SaveMenu = '/sys/menu/save',
+  UpdateMenu = '/sys/menu/update',
+  DeleteMenu = '/sys/menu/delete',
 }
 
 /**

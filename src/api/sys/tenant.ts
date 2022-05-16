@@ -2,11 +2,11 @@ import { defHttp } from '/@/utils/http/axios';
 import { ContentTypeEnum } from '/@/enums/httpEnum';
 
 enum Api {
-  GetTenantList = '/system/tenant/query',
-  SaveTenant = '/system/tenant/save',
-  UpdateTenant = '/system/tenant/update',
-  DeleteTenant = '/system/tenant/delete',
-  GetLocaleList = '/system/tenant/locale/list',
+  GetTenantList = '/sys/tenant/query',
+  SaveTenant = '/sys/tenant/save',
+  UpdateTenant = '/sys/tenant/update',
+  DeleteTenant = '/sys/tenant/delete',
+  GetLocaleList = '/sys/tenant/locale/list',
 }
 
 export function getTenantList(params) {

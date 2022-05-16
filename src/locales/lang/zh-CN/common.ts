@@ -16,6 +16,7 @@ export default {
   searchText: '搜索',
   queryText: '查询',
   operateText: '操作',
+  syncText: '同步',
 
   inputText: '请输入',
   chooseText: '请选择',
