@@ -19,8 +19,9 @@ import { router } from '/@/router';
 import { usePermissionStore } from '/@/store/modules/permission';
 import { RouteRecordRaw } from 'vue-router';
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
-import { h } from 'vue';
+import { h, unref } from 'vue';
 import detailRoutes from '/@/router/routes/detail';
+import { LoginStateEnum, useLoginState } from '/@/views/sys/login/useLogin';
 
 interface UserState {
   userInfo: Nullable<UserInfo>;
@@ -197,7 +198,16 @@ export const useUserStore = defineStore({
       this.setRefreshToken(undefined);
       this.setSessionTimeout(false);
       this.setUserInfo(null);
-      goLogin && router.push(PageEnum.BASE_LOGIN);
+
+      const { setLoginState, getLoginState } = useLoginState();
+      const currentLoginState = unref(getLoginState);
+      if (
+        currentLoginState === LoginStateEnum.GOOGLE_VERIFY ||
+        currentLoginState === LoginStateEnum.GOOGLE_BIND
+      ) {
+        setLoginState(LoginStateEnum.LOGIN);
+      }
+      goLogin && (await router.push(PageEnum.BASE_LOGIN));
     },
 
     /**

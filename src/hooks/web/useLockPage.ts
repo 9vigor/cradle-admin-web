@@ -40,7 +40,7 @@ export function useLockPage() {
   function lockPage(): void {
     lockStore.setLockInfo({
       isLock: true,
-      pwd: undefined,
+      pwd: '1234',
     });
   }
 

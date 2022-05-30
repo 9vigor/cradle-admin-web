@@ -2,11 +2,7 @@
   <template v-if="getShow">
     <LoginFormTitle class="enter-x" />
     <div class="enter-x min-w-64 min-h-64">
-      <QrCode
-        :value="userStore.getGoogleQrUrl"
-        class="enter-x flex justify-center xl:justify-start"
-        :width="280"
-      />
+      <QrCode :value="userStore.getGoogleQrUrl" class="enter-x flex justify-center" :width="280" />
       <Form
         class="p-4 enter-x"
         :model="formData"
