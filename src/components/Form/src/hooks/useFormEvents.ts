@@ -39,14 +39,13 @@ export function useFormEvents({
     Object.keys(formModel).forEach((key) => {
       const schema = unref(getSchema).find((item) => item.field === key);
       const isInput = schema?.component && defaultValueComponents.includes(schema.component);
-      formModel[key] = isInput
-        ? defaultValueRef.value[key] || undefined
-        : defaultValueRef.value[key];
+      const defaultValue = cloneDeep(defaultValueRef.value[key]);
+      formModel[key] = isInput ? defaultValue || '' : defaultValue;
     });
-    await nextTick(() => clearValidate());
+    nextTick(() => clearValidate());
 
     emit('reset', toRaw(formModel));
-    submitOnReset && (await handleSubmit());
+    submitOnReset && handleSubmit();
   }
 
   /**
@@ -102,7 +101,7 @@ export function useFormEvents({
           } catch (e) {
             // key not exist
             if (isDef(defaultValueRef.value[nestKey])) {
-              formModel[nestKey] = defaultValueRef.value[nestKey];
+              formModel[nestKey] = cloneDeep(defaultValueRef.value[nestKey]);
             }
           }
         });
