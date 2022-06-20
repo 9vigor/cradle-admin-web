@@ -179,6 +179,8 @@ export const drawerFormSchema: FormSchema[] = [
     label: t('sys.user.role'),
     component: 'ApiSelect',
     componentProps: {
+      showSearch: true,
+      optionFilterProp: 'label',
       api: getAllRoleList,
       labelField: 'name',
       valueField: 'id',

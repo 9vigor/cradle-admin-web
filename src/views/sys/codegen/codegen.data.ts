@@ -42,6 +42,8 @@ export const searchFormSchema: FormSchema[] = [
     label: t('sys.codegen.tableName'),
     component: 'ApiSelect',
     componentProps: {
+      showSearch: true,
+      optionFilterProp: 'label',
       api: getTableList,
       labelField: 'tableName',
       valueField: 'tableName',
