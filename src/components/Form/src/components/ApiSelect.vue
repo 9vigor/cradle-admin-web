@@ -88,7 +88,7 @@
       });
 
       watchEffect(() => {
-        props.immediate && !props.alwaysLoad && fetch();
+        props.immediate && fetch();
       });
 
       watch(
