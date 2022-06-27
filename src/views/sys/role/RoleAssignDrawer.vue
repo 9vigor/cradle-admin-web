@@ -94,15 +94,16 @@
       });
 
       function handleAssign() {
-        assign({ roleId: rowId.value, userIds: checkedKeys.value, addUser: true });
+        assign({ roleId: rowId.value, userIds: checkedKeys.value, addUser: true }).then(() => {
+          searchInfo.roleId = rowId.value;
+          reload();
+        });
         searchInfo.roleId = rowId.value;
         reload();
       }
 
       function handleRemove() {
-        assign({ roleId: rowId.value, userIds: checkedKeys.value, addUser: false });
-        searchInfo.roleId = rowId.value;
-        reload();
+        assign({ roleId: rowId.value, userIds: checkedKeys.value, addUser: false }).then(() => {});
       }
 
       function onFetchSuccess() {}
