@@ -4,7 +4,6 @@
     :title="t('layout.header.tooltipPersonalCenter')"
     v-bind="$attrs"
     @register="registerUserCenterModal"
-    width="50%"
   >
     <Tabs v-model:activeKey="activeKey" tabPosition="left">
       <TabPane key="info">
@@ -23,7 +22,7 @@
         <BasicForm @register="userInfoForm" />
         <a-button type="primary" @click="handleUpdateUserInfo">修改</a-button>
       </TabPane>
-      <TabPane key="password">
+      <TabPane key="password" forceRender>
         <template #tab>
           <span>
             <Icon icon="vaadin:password" />
@@ -82,7 +81,7 @@
         labelWidth: 150,
         schemas: userInfoFormSchema,
         showActionButtonGroup: false,
-        baseColProps: {},
+        baseColProps: { lg: 22, md: 22 },
       });
 
       const [
@@ -97,6 +96,7 @@
         labelWidth: 150,
         schemas: changePasswordFormSchema,
         showActionButtonGroup: false,
+        baseColProps: { lg: 22, md: 22 },
       });
 
       const [registerUserCenterModal, { setModalProps, closeModal }] = useModalInner((data) => {
