@@ -22,33 +22,35 @@
           {{ t('sys.codegen.batchGenerate') }}
         </a-button>
       </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              icon: 'clarity:note-edit-line',
-              tooltip: t('common.editText'),
-              onClick: handleEdit.bind(null, record),
-              ifShow: hasPermission('sys:gen:update'),
-            },
-            {
-              icon: 'ant-design:delete-outlined',
-              tooltip: t('common.delText'),
-              color: 'error',
-              ifShow: hasPermission('sys:gen:delete'),
-              popConfirm: {
-                title: t('common.delTip'),
-                confirm: handleDelete.bind(null, record),
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'action'">
+          <TableAction
+            :actions="[
+              {
+                icon: 'clarity:note-edit-line',
+                tooltip: t('common.editText'),
+                onClick: handleEdit.bind(null, record),
+                ifShow: hasPermission('sys:gen:update'),
               },
-            },
-            {
-              icon: 'clarity:export-line',
-              tooltip: t('sys.codegen.generate'),
-              onClick: handleGenerate.bind(null, record),
-              ifShow: hasPermission('sys:gen:generate'),
-            },
-          ]"
-        />
+              {
+                icon: 'ant-design:delete-outlined',
+                tooltip: t('common.delText'),
+                color: 'error',
+                ifShow: hasPermission('sys:gen:delete'),
+                popConfirm: {
+                  title: t('common.delTip'),
+                  confirm: handleDelete.bind(null, record),
+                },
+              },
+              {
+                icon: 'clarity:export-line',
+                tooltip: t('sys.codegen.generate'),
+                onClick: handleGenerate.bind(null, record),
+                ifShow: hasPermission('sys:gen:generate'),
+              },
+            ]"
+          />
+        </template>
       </template>
     </BasicTable>
     <CodegenDrawer @register="registerDrawer" @success="handleSuccess" />
@@ -103,7 +105,6 @@
           width: 120,
           title: t('common.operateText'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
           fixed: undefined,
         },
       });

@@ -1,21 +1,23 @@
 <template>
   <div>
     <BasicTable @register="registerTable">
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              icon: 'ant-design:delete-outlined',
-              color: 'error',
-              tooltip: t('common.delText'),
-              ifShow: hasPermission('sys:login-log:delete'),
-              popConfirm: {
-                title: t('common.delTip'),
-                confirm: handleDelete.bind(null, record),
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'action'">
+          <TableAction
+            :actions="[
+              {
+                icon: 'ant-design:delete-outlined',
+                color: 'error',
+                tooltip: t('common.delText'),
+                ifShow: hasPermission('sys:login-log:delete'),
+                popConfirm: {
+                  title: t('common.delTip'),
+                  confirm: handleDelete.bind(null, record),
+                },
               },
-            },
-          ]"
-        />
+            ]"
+          />
+        </template>
       </template>
     </BasicTable>
   </div>
@@ -54,7 +56,6 @@
           width: 100,
           title: t('common.operateText'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
       });
 

@@ -6,27 +6,29 @@
           {{ t('sys.menu.create') }}
         </a-button>
       </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              icon: 'clarity:note-edit-line',
-              tooltip: t('common.editText'),
-              onClick: handleEdit.bind(null, record),
-              ifShow: hasPermission('sys:menu:update'),
-            },
-            {
-              icon: 'ant-design:delete-outlined',
-              tooltip: t('common.delText'),
-              color: 'error',
-              ifShow: hasPermission('sys:menu:delete'),
-              popConfirm: {
-                title: t('sys.menu.delete'),
-                confirm: handleDelete.bind(null, record),
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'action'">
+          <TableAction
+            :actions="[
+              {
+                icon: 'clarity:note-edit-line',
+                tooltip: t('common.editText'),
+                onClick: handleEdit.bind(null, record),
+                ifShow: hasPermission('sys:menu:update'),
               },
-            },
-          ]"
-        />
+              {
+                icon: 'ant-design:delete-outlined',
+                tooltip: t('common.delText'),
+                color: 'error',
+                ifShow: hasPermission('sys:menu:delete'),
+                popConfirm: {
+                  title: t('sys.menu.delete'),
+                  confirm: handleDelete.bind(null, record),
+                },
+              },
+            ]"
+          />
+        </template>
       </template>
     </BasicTable>
     <MenuDrawer @register="registerDrawer" @success="handleSuccess" />
@@ -70,7 +72,6 @@
           width: 80,
           title: t('common.operateText'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
           fixed: undefined,
         },
       });

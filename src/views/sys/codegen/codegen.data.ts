@@ -114,7 +114,6 @@ export const editableColumns: BasicColumn[] = [
   {
     title: '字段名',
     dataIndex: 'labelName',
-    slots: { customRender: 'labelName', title: 'labelName' },
   },
   {
     title: 'DB类型',
@@ -129,42 +128,34 @@ export const editableColumns: BasicColumn[] = [
   {
     title: 'Java字段名称',
     dataIndex: 'javaFieldName',
-    slots: { customRender: 'javaFieldName', title: 'javaFieldNameTitle' },
   },
   {
     title: '可空 | 插入 | 更新',
     dataIndex: 'nullable|insert|update',
-    slots: { customRender: 'nullable|insert|update' },
   },
   {
     title: '列表 | 排序',
     dataIndex: 'list|sortable',
-    slots: { customRender: 'list|sortable' },
   },
   {
     title: '查询',
     dataIndex: 'search',
-    slots: { customRender: 'search' },
     width: 60,
   },
   {
     title: '查询方式',
     dataIndex: 'queryType',
-    slots: { customRender: 'queryType' },
   },
   {
     title: '表单类型',
     dataIndex: 'inputType',
-    slots: { customRender: 'inputType' },
   },
   {
     title: '字典',
     dataIndex: 'dictType',
-    slots: { customRender: 'dictType' },
   },
   {
     title: '顺序',
     dataIndex: 'sort',
-    slots: { customRender: 'sort' },
   },
 ];

@@ -10,59 +10,61 @@
           {{ t('sys.user.unlock') }}
         </a-button>
       </template>
-      <template #avatarUrl="{ text }">
-        <Image v-if="text" :src="text" height="40px" width="40px" />
-      </template>
-      <template #status="{ text }">
-        <Tag :color="text === StatusEnum.NORMAL ? 'blue' : 'red'">
-          {{ statusDictMap.get(text) }}
-        </Tag>
-      </template>
-      <template #googleBind="{ record }">
-        <Tag :color="record.googleVerify === true ? 'blue' : 'red'">
-          {{
-            record.googleVerify === true
-              ? t('sys.user.google.openVerify')
-              : t('sys.user.google.closeVerify')
-          }}
-        </Tag>
-        <Divider type="vertical" />
-        <Tag :color="record.googleBind === true ? 'blue' : 'red'">
-          {{
-            record.googleBind === true ? t('sys.user.google.bound') : t('sys.user.google.unbound')
-          }}
-        </Tag>
-        <Divider type="vertical" />
-        <a @click="handleGoogleSecret(record)" v-if="hasPermission('sys:user:google-secret')">{{
-          t('common.detailText')
-        }}</a>
-      </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              icon: 'clarity:info-standard-line',
-              tooltip: t('common.detailText'),
-              onClick: handleView.bind(null, record),
-            },
-            {
-              icon: 'clarity:note-edit-line',
-              tooltip: t('common.editText'),
-              onClick: handleEdit.bind(null, record),
-              ifShow: hasPermission('sys:user:update'),
-            },
-            {
-              icon: 'ant-design:delete-outlined',
-              color: 'error',
-              tooltip: t('common.delText'),
-              ifShow: hasPermission('sys:user:delete'),
-              popConfirm: {
-                title: t('common.delTip'),
-                confirm: handleDelete.bind(null, record),
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'avatarUrl'">
+          <Image v-if="record.avatarUrl" :src="record.avatarUrl" height="40px" width="40px" />
+        </template>
+        <template v-if="column.key === 'status'">
+          <Tag :color="record.status === StatusEnum.NORMAL ? 'blue' : 'red'">
+            {{ statusDictMap.get(record.status) }}
+          </Tag>
+        </template>
+        <template v-if="column.key === 'googleBind'">
+          <Tag :color="record.googleVerify === true ? 'blue' : 'red'">
+            {{
+              record.googleVerify === true
+                ? t('sys.user.google.openVerify')
+                : t('sys.user.google.closeVerify')
+            }}
+          </Tag>
+          <Divider type="vertical" />
+          <Tag :color="record.googleBind === true ? 'blue' : 'red'">
+            {{
+              record.googleBind === true ? t('sys.user.google.bound') : t('sys.user.google.unbound')
+            }}
+          </Tag>
+          <Divider type="vertical" />
+          <a @click="handleGoogleSecret(record)" v-if="hasPermission('sys:user:google-secret')">{{
+            t('common.detailText')
+          }}</a>
+        </template>
+        <template v-if="column.key === 'action'">
+          <TableAction
+            :actions="[
+              {
+                icon: 'clarity:info-standard-line',
+                tooltip: t('common.detailText'),
+                onClick: handleView.bind(null, record),
               },
-            },
-          ]"
-        />
+              {
+                icon: 'clarity:note-edit-line',
+                tooltip: t('common.editText'),
+                onClick: handleEdit.bind(null, record),
+                ifShow: hasPermission('sys:user:update'),
+              },
+              {
+                icon: 'ant-design:delete-outlined',
+                color: 'error',
+                tooltip: t('common.delText'),
+                ifShow: hasPermission('sys:user:delete'),
+                popConfirm: {
+                  title: t('common.delTip'),
+                  confirm: handleDelete.bind(null, record),
+                },
+              },
+            ]"
+          />
+        </template>
       </template>
     </BasicTable>
     <UserDrawer @register="registerDrawer" @success="handleSuccess" />
@@ -130,7 +132,6 @@
           width: 120,
           title: t('common.operateText'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
       });
 

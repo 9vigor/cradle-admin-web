@@ -6,39 +6,41 @@
           {{ t('common.createText') }}
         </a-button>
       </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              icon: 'clarity:assign-user-line',
-              tooltip: t('sys.role.assign'),
-              onClick: handleAssign.bind(null, record),
-              ifShow: hasPermission('sys:role:assign'),
-            },
-            {
-              icon: 'clarity:note-edit-line',
-              tooltip: t('common.editText'),
-              onClick: handleEdit.bind(null, record),
-              ifShow:
-                hasPermission('sys:role:update') &&
-                record.code !== 'ADMIN' &&
-                record.code !== 'MEMBER',
-            },
-            {
-              icon: 'ant-design:delete-outlined',
-              tooltip: t('common.delText'),
-              color: 'error',
-              ifShow:
-                hasPermission('sys:role:delete') &&
-                record.code !== 'ADMIN' &&
-                record.code !== 'MEMBER',
-              popConfirm: {
-                title: t('common.delTip'),
-                confirm: handleDelete.bind(null, record),
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'action'">
+          <TableAction
+            :actions="[
+              {
+                icon: 'clarity:assign-user-line',
+                tooltip: t('sys.role.assign'),
+                onClick: handleAssign.bind(null, record),
+                ifShow: hasPermission('sys:role:assign'),
               },
-            },
-          ]"
-        />
+              {
+                icon: 'clarity:note-edit-line',
+                tooltip: t('common.editText'),
+                onClick: handleEdit.bind(null, record),
+                ifShow:
+                  hasPermission('sys:role:update') &&
+                  record.code !== 'ADMIN' &&
+                  record.code !== 'MEMBER',
+              },
+              {
+                icon: 'ant-design:delete-outlined',
+                tooltip: t('common.delText'),
+                color: 'error',
+                ifShow:
+                  hasPermission('sys:role:delete') &&
+                  record.code !== 'ADMIN' &&
+                  record.code !== 'MEMBER',
+                popConfirm: {
+                  title: t('common.delTip'),
+                  confirm: handleDelete.bind(null, record),
+                },
+              },
+            ]"
+          />
+        </template>
       </template>
     </BasicTable>
     <RoleDrawer @register="registerDrawer" @success="handleSuccess" />
@@ -83,7 +85,6 @@
           width: 120,
           title: t('common.operateText'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
           fixed: undefined,
         },
       });

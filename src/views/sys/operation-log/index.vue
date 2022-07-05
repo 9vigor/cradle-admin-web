@@ -1,26 +1,28 @@
 <template>
   <div>
     <BasicTable @register="registerTable">
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              icon: 'clarity:info-standard-line',
-              tooltip: t('common.detailText'),
-              onClick: handleView.bind(null, record),
-            },
-            {
-              icon: 'ant-design:delete-outlined',
-              color: 'error',
-              tooltip: t('common.delText'),
-              ifShow: hasPermission('sys:operation-log:delete'),
-              popConfirm: {
-                title: t('common.delTip'),
-                confirm: handleDelete.bind(null, record),
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'action'">
+          <TableAction
+            :actions="[
+              {
+                icon: 'clarity:info-standard-line',
+                tooltip: t('common.detailText'),
+                onClick: handleView.bind(null, record),
               },
-            },
-          ]"
-        />
+              {
+                icon: 'ant-design:delete-outlined',
+                color: 'error',
+                tooltip: t('common.delText'),
+                ifShow: hasPermission('sys:operation-log:delete'),
+                popConfirm: {
+                  title: t('common.delTip'),
+                  confirm: handleDelete.bind(null, record),
+                },
+              },
+            ]"
+          />
+        </template>
       </template>
     </BasicTable>
     <OperationLogDrawer @register="registerDrawer" @success="handleSuccess" />
@@ -64,7 +66,6 @@
           width: 100,
           title: t('common.operateText'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
       });
 

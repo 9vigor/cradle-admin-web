@@ -10,98 +10,96 @@
     <BasicForm @register="registerForm" />
     <div class="p-4">
       <BasicTable @register="registerTable">
-        <template #fieldNameTitle>
-          <TypographyText type="danger">*</TypographyText>
-          字段名
+        <template #headerCell="{ column }">
+          <template v-if="column.key === 'labelName'">
+            <TypographyText type="danger">*</TypographyText>
+            字段名
+          </template>
+          <template v-else-if="column.key === 'javaFieldName'">
+            <TypographyText type="danger">*</TypographyText>
+            Java字段名
+          </template>
+          <template v-else>
+            <HeaderCell :column="column" />
+          </template>
         </template>
-        <template #javaFieldNameTitle>
-          <TypographyText type="danger">*</TypographyText>
-          Java字段名
-        </template>
-        <template #labelName="{ index }">
-          <Input
-            v-model:value="tableDataSource[index].labelName"
-            :maxlength="6"
-            :style="{ border: tableDataSource[index].labelName ? '' : '1px solid red' }"
-            placeholder="最长6"
-          />
-        </template>
-        <template #javaFieldName="{ index }">
-          <Input
-            v-model:value="tableDataSource[index].javaFieldName"
-            :disabled="tableDataSource[index].defaultField"
-            :maxlength="20"
-            :style="{ border: tableDataSource[index].javaFieldName ? '' : '1px solid red' }"
-          />
-        </template>
-        <template #nullable|insert|update="{ index }">
-          <Divider :dashed="true" type="vertical" />
-          <Checkbox v-model:checked="tableDataSource[index].nullable" />
-          <Divider type="vertical" />
-          <Checkbox v-model:checked="tableDataSource[index].insert" />
-          <Divider type="vertical" />
-          <Checkbox v-model:checked="tableDataSource[index].update" />
-        </template>
-        <template #list|sortable="{ index }">
-          <Divider :dashed="true" type="vertical" />
-          <Checkbox
-            v-model:checked="tableDataSource[index].list"
-            :disabled="!allowedSearchAndShow(index)"
-          />
-          <Divider type="vertical" />
-          <Checkbox
-            v-model:checked="tableDataSource[index].sortable"
-            :disabled="!allowedSearchAndShow(index)"
-          />
-        </template>
-        <template #search="{ index }">
-          <Tooltip placement="top">
-            <template #title>
-              <span>配合查询方式</span>
-            </template>
-            <Checkbox
-              v-model:checked="tableDataSource[index].search"
-              :disabled="!allowedSearchAndShow(index)"
+        <template #bodyCell="{ column, record }">
+          <template v-if="column.key === 'labelName'">
+            <Input
+              v-model:value="record.labelName"
+              :maxlength="6"
+              :style="{ border: record.labelName ? '' : '1px solid red' }"
+              placeholder="最长6"
             />
-          </Tooltip>
-        </template>
-        <template #queryType="{ index }">
-          <Select
-            v-model:value="tableDataSource[index].queryType"
-            :allowClear="true"
-            :disabled="!allowedSearchAndShow(index)"
-            :options="queryTypeDict"
-            style="width: 100px"
-          />
-        </template>
-        <template #inputType="{ index }">
-          <Select
-            v-model:value="tableDataSource[index].inputType"
-            :allowClear="true"
-            :options="inputTypeDict"
-            style="width: 110px"
-            @change="inputTypeChange(index)"
-          />
-        </template>
-        <template #dictType="{ index }">
-          <Select
-            v-model:value="tableDataSource[index].dictType"
-            :allowClear="true"
-            :disabled="!dictField(index)"
-            :options="dictTypeDict"
-            placeholder="可data.ts补全"
-            show-search
-            style="width: 140px"
-          />
-        </template>
-        <template #sort="{ index }">
-          <InputNumber
-            v-model:value="tableDataSource[index].sort"
-            :maxlength="20"
-            :step="10"
-            :style="{ border: tableDataSource[index].sort != null ? '' : '1px solid red' }"
-            placeholder="升序"
-          />
+          </template>
+          <template v-if="column.key === 'javaFieldName'">
+            <Input
+              v-model:value="record.javaFieldName"
+              :disabled="record.defaultField"
+              :maxlength="20"
+              :style="{ border: record.javaFieldName ? '' : '1px solid red' }"
+            />
+          </template>
+          <template v-if="column.key === 'nullable|insert|update'">
+            <Divider :dashed="true" type="vertical" />
+            <Checkbox v-model:checked="record.nullable" />
+            <Divider type="vertical" />
+            <Checkbox v-model:checked="record.insert" />
+            <Divider type="vertical" />
+            <Checkbox v-model:checked="record.update" />
+          </template>
+          <template v-if="column.key === 'list|sortable'">
+            <Divider :dashed="true" type="vertical" />
+            <Checkbox v-model:checked="record.list" :disabled="!allowedSearchAndShow(record)" />
+            <Divider type="vertical" />
+            <Checkbox v-model:checked="record.sortable" :disabled="!allowedSearchAndShow(record)" />
+          </template>
+          <template v-if="column.key === 'search'">
+            <Tooltip placement="top">
+              <template #title>
+                <span>配合查询方式</span>
+              </template>
+              <Checkbox v-model:checked="record.search" :disabled="!allowedSearchAndShow(record)" />
+            </Tooltip>
+          </template>
+          <template v-if="column.key === 'queryType'">
+            <Select
+              v-model:value="record.queryType"
+              :allowClear="true"
+              :disabled="!allowedSearchAndShow(record)"
+              :options="queryTypeDict"
+              style="width: 100px"
+            />
+          </template>
+          <template v-if="column.key === 'inputType'">
+            <Select
+              v-model:value="record.inputType"
+              :allowClear="true"
+              :options="inputTypeDict"
+              style="width: 110px"
+              @change="inputTypeChange(record)"
+            />
+          </template>
+          <template v-if="column.key === 'dictType'">
+            <Select
+              v-model:value="record.dictType"
+              :allowClear="true"
+              :disabled="!dictField(record)"
+              :options="dictTypeDict"
+              placeholder="可data.ts补全"
+              show-search
+              style="width: 140px"
+            />
+          </template>
+          <template v-if="column.key === 'sort'">
+            <InputNumber
+              v-model:value="record.sort"
+              :maxlength="20"
+              :step="10"
+              :style="{ border: record.sort != null ? '' : '1px solid red' }"
+              placeholder="升序"
+            />
+          </template>
         </template>
       </BasicTable>
     </div>
@@ -123,6 +121,7 @@
     Tooltip,
     Divider,
   } from 'ant-design-vue';
+  import HeaderCell from '/@/components/Table/src/components/HeaderCell.vue';
   import { saveCodegen, updateCodegen } from '/@/api/sys/codegen';
   import { useI18n } from '/@/hooks/web/useI18n';
 
@@ -132,6 +131,7 @@
       BasicDrawer,
       BasicForm,
       BasicTable,
+      HeaderCell,
       Checkbox,
       TypographyText,
       Input,
@@ -208,21 +208,19 @@
       };
     },
     methods: {
-      allowedSearchAndShow(index) {
-        return !['RICH_TEXT', 'IMAGE', 'FILE'].includes(this.tableDataSource[index].inputType);
+      allowedSearchAndShow(record) {
+        return !['RICH_TEXT', 'IMAGE', 'FILE'].includes(record.inputType);
       },
-      inputTypeChange(index) {
-        if (['RICH_TEXT', 'IMAGE', 'FILE'].includes(this.tableDataSource[index].inputType)) {
-          this.tableDataSource[index].search = false;
-          this.tableDataSource[index].list = false;
-          this.tableDataSource[index].sortable = false;
-          this.tableDataSource[index].queryType = 'NONE';
+      inputTypeChange(record) {
+        if (['RICH_TEXT', 'IMAGE', 'FILE'].includes(record.inputType)) {
+          record.search = false;
+          record.list = false;
+          record.sortable = false;
+          record.queryType = 'NONE';
         }
       },
-      dictField(index) {
-        return ['SELECT', 'SELECT_MULTIPLE', 'RADIO', 'CHECKBOX'].includes(
-          this.tableDataSource[index].inputType,
-        );
+      dictField(record) {
+        return ['SELECT', 'SELECT_MULTIPLE', 'RADIO', 'CHECKBOX'].includes(record.inputType);
       },
     },
   });

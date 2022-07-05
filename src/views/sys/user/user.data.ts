@@ -18,7 +18,6 @@ export const columns: BasicColumn[] = [
     title: t('sys.user.avatar'),
     dataIndex: 'avatarUrl',
     width: 120,
-    slots: { customRender: 'avatarUrl' },
   },
   {
     title: t('sys.user.name'),
@@ -34,12 +33,10 @@ export const columns: BasicColumn[] = [
     title: t('sys.user.googleSecret'),
     dataIndex: 'googleBind',
     width: 200,
-    slots: { customRender: 'googleBind' },
   },
   {
     title: t('common.status'),
     dataIndex: 'status',
-    slots: { customRender: 'status' },
   },
   {
     title: t('common.createTime'),

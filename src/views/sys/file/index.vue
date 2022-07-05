@@ -11,33 +11,35 @@
           v-if="hasPermission('sys:file:upload')"
         />
       </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              icon: 'clarity:eye-line',
-              tooltip: t('common.previewText'),
-              onClick: handlePreview.bind(null, record),
-              ifShow: hasPermission('sys:file:download'),
-            },
-            {
-              icon: 'clarity:download-line',
-              tooltip: t('common.downloadText'),
-              onClick: handleDownload.bind(null, record),
-              ifShow: hasPermission('sys:file:download'),
-            },
-            {
-              icon: 'ant-design:delete-outlined',
-              color: 'error',
-              tooltip: t('common.delText'),
-              ifShow: hasPermission('sys:file:delete'),
-              popConfirm: {
-                title: t('common.delTip'),
-                confirm: handleDelete.bind(null, record),
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'action'">
+          <TableAction
+            :actions="[
+              {
+                icon: 'clarity:eye-line',
+                tooltip: t('common.previewText'),
+                onClick: handlePreview.bind(null, record),
+                ifShow: hasPermission('sys:file:download'),
               },
-            },
-          ]"
-        />
+              {
+                icon: 'clarity:download-line',
+                tooltip: t('common.downloadText'),
+                onClick: handleDownload.bind(null, record),
+                ifShow: hasPermission('sys:file:download'),
+              },
+              {
+                icon: 'ant-design:delete-outlined',
+                color: 'error',
+                tooltip: t('common.delText'),
+                ifShow: hasPermission('sys:file:delete'),
+                popConfirm: {
+                  title: t('common.delTip'),
+                  confirm: handleDelete.bind(null, record),
+                },
+              },
+            ]"
+          />
+        </template>
       </template>
     </BasicTable>
   </div>
@@ -79,7 +81,6 @@
           width: 100,
           title: t('common.operateText'),
           dataIndex: 'action',
-          slots: { customRender: 'action' },
         },
       });
 
