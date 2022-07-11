@@ -3,7 +3,7 @@
  */
 export enum ResultEnum {
   SUCCESS = '0',
-  ERROR = '1',
+  ERROR = '-1',
   TOKEN_EXPIRED = '1011',
   REFRESH_TOKEN_EXPIRED = '1012',
 }
