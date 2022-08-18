@@ -20,6 +20,7 @@ import { useUserStore, useUserStoreWithOut } from '/@/store/modules/user';
 import { AxiosRetry } from '/@/utils/http/axios/axiosRetry';
 import { refreshToken } from '/@/api/sys/user';
 import { AxiosRequestConfig } from 'axios';
+import { LoginStateEnum, useLoginState} from "/@/views/sys/login/useLogin";
 
 const globSetting = useGlobSetting();
 const urlPrefix = globSetting.urlPrefix;
@@ -67,6 +68,8 @@ const transform: AxiosTransform = {
         const userStore = useUserStoreWithOut();
         userStore.setToken(undefined);
         userStore.logout(true);
+        const { setLoginState } = useLoginState();
+        setLoginState(LoginStateEnum.LOGIN);
         break;
       default:
         if (msg) {
