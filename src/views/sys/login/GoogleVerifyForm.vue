@@ -28,13 +28,14 @@
   </template>
 </template>
 <script lang="ts" setup>
-  import { reactive, ref, computed, unref } from 'vue';
+  import { reactive, ref, computed, unref, onUpdated, nextTick } from 'vue';
   import { Form, Input, Button } from 'ant-design-vue';
   import LoginFormTitle from './LoginFormTitle.vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useLoginState, useFormRules, useFormValid, LoginStateEnum } from './useLogin';
   import { useUserStore } from '/@/store/modules/user';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { onKeyStroke } from '@vueuse/core';
 
   const FormItem = Form.Item;
   const { t } = useI18n();
@@ -53,6 +54,8 @@
   });
 
   const { validForm } = useFormValid(formRef);
+
+  onKeyStroke('Enter', handleLogin);
 
   const getShow = computed(() => unref(getLoginState) === LoginStateEnum.GOOGLE_VERIFY);
 
@@ -81,4 +84,12 @@
       loading.value = false;
     }
   }
+  onUpdated(() => {
+    if (getShow.value) {
+      nextTick(function () {
+        const googleCodeInput = document.getElementById('form_item_googleCode');
+        googleCodeInput && googleCodeInput.focus();
+      });
+    }
+  });
 </script>

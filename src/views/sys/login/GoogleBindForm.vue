@@ -31,7 +31,7 @@
   </template>
 </template>
 <script lang="ts" setup>
-  import { computed, reactive, ref, unref } from 'vue';
+  import { computed, nextTick, onUpdated, reactive, ref, unref } from 'vue';
   import LoginFormTitle from './LoginFormTitle.vue';
   import { Form, Input, Button, Divider } from 'ant-design-vue';
   import { QrCode } from '/@/components/Qrcode/index';
@@ -39,6 +39,7 @@
   import { useLoginState, LoginStateEnum, useFormRules, useFormValid } from './useLogin';
   import { useUserStore } from '/@/store/modules/user';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { onKeyStroke } from '@vueuse/core';
 
   const FormItem = Form.Item;
   const { t } = useI18n();
@@ -55,6 +56,8 @@
     verifyToken: '',
     googleCode: '',
   });
+
+  onKeyStroke('Enter', handleLogin);
 
   async function handleLogin() {
     const data = await validForm();
@@ -81,4 +84,13 @@
       loading.value = false;
     }
   }
+
+  onUpdated(() => {
+    if (getShow.value) {
+      nextTick(function () {
+        const googleCodeInput = document.getElementById('form_item_googleCode');
+        googleCodeInput && googleCodeInput.focus();
+      });
+    }
+  });
 </script>

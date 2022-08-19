@@ -82,7 +82,7 @@
   </Form>
 </template>
 <script lang="ts" setup>
-  import { reactive, ref, unref, computed } from 'vue';
+  import { reactive, ref, unref, computed, onMounted, nextTick } from 'vue';
 
   import { Checkbox, Form, Input, Row, Col, Button, Divider } from 'ant-design-vue';
   import {
@@ -168,4 +168,13 @@
       loading.value = false;
     }
   }
+
+  onMounted(() => {
+    if (getShow.value) {
+      nextTick(function () {
+        const usernameInput = document.getElementById('form_item_account');
+        usernameInput && usernameInput.focus();
+      });
+    }
+  });
 </script>
