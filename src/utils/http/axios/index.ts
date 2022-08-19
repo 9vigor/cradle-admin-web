@@ -20,7 +20,7 @@ import { useUserStore, useUserStoreWithOut } from '/@/store/modules/user';
 import { AxiosRetry } from '/@/utils/http/axios/axiosRetry';
 import { refreshToken } from '/@/api/sys/user';
 import { AxiosRequestConfig } from 'axios';
-import { LoginStateEnum, useLoginState} from "/@/views/sys/login/useLogin";
+import { LoginStateEnum, useLoginState } from '/@/views/sys/login/useLogin';
 
 const globSetting = useGlobSetting();
 const urlPrefix = globSetting.urlPrefix;
@@ -114,7 +114,11 @@ const transform: AxiosTransform = {
     } else {
       if (!isString(params)) {
         formatDate && formatRequestDate(params);
-        if (Reflect.has(config, 'data') && config.data && (Object.keys(config.data).length > 0 || config.data instanceof FormData)) {
+        if (
+          Reflect.has(config, 'data') &&
+          config.data &&
+          (Object.keys(config.data).length > 0 || config.data instanceof FormData)
+        ) {
           config.data = data;
           config.params = params;
         } else {
@@ -158,7 +162,7 @@ const transform: AxiosTransform = {
   /**
    * @description: 响应拦截器处理
    */
-  responseInterceptors: (res: AxiosResponse<any>) => {
+  responseInterceptors: (res: AxiosResponse) => {
     return res;
   },
 
