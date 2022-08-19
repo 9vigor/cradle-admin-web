@@ -39,7 +39,6 @@
   import { useLoginState, LoginStateEnum, useFormRules, useFormValid } from './useLogin';
   import { useUserStore } from '/@/store/modules/user';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { onKeyStroke } from '@vueuse/core';
 
   const FormItem = Form.Item;
   const { t } = useI18n();
@@ -56,8 +55,6 @@
     verifyToken: '',
     googleCode: '',
   });
-
-  onKeyStroke('Enter', handleLogin);
 
   async function handleLogin() {
     const data = await validForm();

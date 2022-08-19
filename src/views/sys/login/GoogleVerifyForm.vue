@@ -35,7 +35,6 @@
   import { useLoginState, useFormRules, useFormValid, LoginStateEnum } from './useLogin';
   import { useUserStore } from '/@/store/modules/user';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { onKeyStroke } from '@vueuse/core';
 
   const FormItem = Form.Item;
   const { t } = useI18n();
@@ -54,8 +53,6 @@
   });
 
   const { validForm } = useFormValid(formRef);
-
-  onKeyStroke('Enter', handleLogin);
 
   const getShow = computed(() => unref(getLoginState) === LoginStateEnum.GOOGLE_VERIFY);
 
