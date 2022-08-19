@@ -34,7 +34,7 @@
   import { computed, nextTick, onUpdated, reactive, ref, unref } from 'vue';
   import LoginFormTitle from './LoginFormTitle.vue';
   import { Form, Input, Button, Divider } from 'ant-design-vue';
-  import { QrCode } from '/@/components/Qrcode/index';
+  import { QrCode } from '/@/components/Qrcode';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useLoginState, LoginStateEnum, useFormRules, useFormValid } from './useLogin';
   import { useUserStore } from '/@/store/modules/user';
