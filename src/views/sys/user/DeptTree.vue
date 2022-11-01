@@ -4,6 +4,7 @@
       :title="t('sys.dept.title')"
       toolbar
       search
+      treeWrapperClassName="h-[calc(100%-35px)] overflow-auto"
       :clickRowToExpand="false"
       :treeData="treeData"
       :fieldNames="{ key: 'key', title: 'title' }"
