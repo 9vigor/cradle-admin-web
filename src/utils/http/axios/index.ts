@@ -24,7 +24,7 @@ import { LoginStateEnum, useLoginState } from '/@/views/sys/login/useLogin';
 
 const globSetting = useGlobSetting();
 const urlPrefix = globSetting.urlPrefix;
-const { createMessage, createErrorModal } = useMessage();
+const { createMessage, createErrorModal, createSuccessModal } = useMessage();
 
 /**
  * @description: 数据处理，方便区分多种处理方式
@@ -56,7 +56,16 @@ const transform: AxiosTransform = {
     // 这里逻辑可以根据项目进行修改
     const hasSuccess = res.data && Reflect.has(res.data, 'code') && code === ResultEnum.SUCCESS;
     if (hasSuccess) {
-      return data;
+      let successMsg = message;
+      if (successMsg === null || successMsg === undefined || successMsg === '') {
+        successMsg = '操作成功';
+      }
+      if (options.successMessageMode === 'modal') {
+        createSuccessModal({ title: t('sys.api.successTip'), content: successMsg });
+      } else if (options.successMessageMode === 'message') {
+        createMessage.success(successMsg);
+      }
+      return result;
     }
 
     // 在此处根据自己项目的实际情况对不同的code执行不同的操作
