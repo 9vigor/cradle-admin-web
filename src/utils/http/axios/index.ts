@@ -1,7 +1,7 @@
 // axios配置  可自行根据项目进行更改，只需更改该文件即可，其他文件可以不动
 // The axios configuration can be changed according to the project, just change the file, other files can be left unchanged
 
-import type { AxiosInstance, AxiosResponse, AxiosRequestConfig } from 'axios';
+import type { AxiosInstance, AxiosResponse, AxiosRequestConfig, axios } from 'axios';
 import { clone } from 'lodash-es';
 import type { RequestOptions, Result } from '/#/axios';
 import type { AxiosTransform, CreateAxiosOptions } from './axiosTransform';
@@ -10,7 +10,7 @@ import { checkStatus } from './checkStatus';
 import { useGlobSetting } from '/@/hooks/setting';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { RequestEnum, ResultEnum, ContentTypeEnum } from '/@/enums/httpEnum';
-import { isString } from '/@/utils/is';
+import { isString, isUnDef, isNull, isEmpty } from '/@/utils/is';
 import { getToken } from '/@/utils/auth';
 import { setObjToUrlParams, deepMerge } from '/@/utils';
 import { useErrorLogStoreWithOut } from '/@/store/modules/errorLog';
@@ -56,8 +56,8 @@ const transform: AxiosTransform = {
     const hasSuccess = res.data && Reflect.has(res.data, 'code') && code === ResultEnum.SUCCESS;
     if (hasSuccess) {
       let successMsg = msg;
-      if (successMsg === null || successMsg === undefined || successMsg === '') {
-        successMsg = '操作成功';
+      if (isNull(successMsg) || isUnDef(successMsg) || isEmpty(successMsg)) {
+        successMsg = t(`sys.api.operationSuccess`);
       }
       if (options.successMessageMode === 'modal') {
         createSuccessModal({ title: t('sys.api.successTip'), content: successMsg });
@@ -85,7 +85,7 @@ const transform: AxiosTransform = {
         }
     }
 
-    // errorMessageMode=‘modal’的时候会显示modal错误弹窗，而不是消息提示，用于一些比较重要的错误
+    // errorMessageMode='modal'的时候会显示modal错误弹窗，而不是消息提示，用于一些比较重要的错误
     // errorMessageMode='none' 一般是调用时明确表示不希望自动弹出错误提示
     if (options.errorMessageMode === 'modal') {
       createErrorModal({ title: t('sys.api.errorTip'), content: errorMsg });
@@ -192,6 +192,10 @@ const transform: AxiosTransform = {
     const msg: string = response?.data?.msg ?? '';
     const err: string = error?.toString?.() ?? '';
     let errMessage = '';
+
+    if (axios.isCancel(error)) {
+      return Promise.reject(error);
+    }
 
     try {
       if (code === 'ECONNABORTED' && message.indexOf('timeout') !== -1) {
