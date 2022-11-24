@@ -1,7 +1,7 @@
 // axios配置  可自行根据项目进行更改，只需更改该文件即可，其他文件可以不动
 // The axios configuration can be changed according to the project, just change the file, other files can be left unchanged
 
-import type { AxiosInstance, AxiosResponse } from 'axios';
+import type { AxiosInstance, AxiosResponse, AxiosRequestConfig } from 'axios';
 import { clone } from 'lodash-es';
 import type { RequestOptions, Result } from '/#/axios';
 import type { AxiosTransform, CreateAxiosOptions } from './axiosTransform';
@@ -19,7 +19,6 @@ import { joinTimestamp, formatRequestDate } from './helper';
 import { useUserStore, useUserStoreWithOut } from '/@/store/modules/user';
 import { AxiosRetry } from '/@/utils/http/axios/axiosRetry';
 import { refreshToken } from '/@/api/sys/user';
-import { AxiosRequestConfig } from 'axios';
 import { LoginStateEnum, useLoginState } from '/@/views/sys/login/useLogin';
 
 const globSetting = useGlobSetting();
@@ -56,7 +55,7 @@ const transform: AxiosTransform = {
     // 这里逻辑可以根据项目进行修改
     const hasSuccess = res.data && Reflect.has(res.data, 'code') && code === ResultEnum.SUCCESS;
     if (hasSuccess) {
-      let successMsg = message;
+      let successMsg = msg;
       if (successMsg === null || successMsg === undefined || successMsg === '') {
         successMsg = '操作成功';
       }
@@ -65,7 +64,7 @@ const transform: AxiosTransform = {
       } else if (options.successMessageMode === 'message') {
         createMessage.success(successMsg);
       }
-      return result;
+      return data;
     }
 
     // 在此处根据自己项目的实际情况对不同的code执行不同的操作
