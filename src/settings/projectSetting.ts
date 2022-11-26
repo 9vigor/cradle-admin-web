@@ -154,7 +154,7 @@ const setting: ProjectConfig = {
   openKeepAlive: true,
 
   // Automatic screen lock time, 0 does not lock the screen. Unit minute default 0
-  lockTime: 5,
+  lockTime: 0,
 
   // Whether to show breadcrumbs
   showBreadCrumb: true,

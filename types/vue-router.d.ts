@@ -7,6 +7,8 @@ declare module 'vue-router' {
     orderNo?: number;
     // title
     title: string;
+    //locale key
+    localeKey?: string;
     // dynamic router level.
     dynamicLevel?: number;
     // dynamic router real route path (For performance).

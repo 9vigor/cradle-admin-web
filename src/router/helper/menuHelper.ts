@@ -5,6 +5,7 @@ import { cloneDeep } from 'lodash-es';
 import { isUrl } from '/@/utils/is';
 import { RouteParams } from 'vue-router';
 import { toRaw } from 'vue';
+import {useI18n} from "/@/hooks/web/useI18n";
 
 export function getAllParentPath<T = Recordable>(treeData: T[], path: string) {
   const menuList = findPath(treeData, (n) => n.path === path) as Menu[];
@@ -46,11 +47,24 @@ export function transformRouteToMenu(routeModList: AppRouteModule[], routerMappi
   // 借助 lodash 深拷贝
   const cloneRouteModList = cloneDeep(routeModList);
   const routeList: AppRouteRecordRaw[] = [];
+  const { t } = useI18n();
 
   // 对路由项进行修改
   cloneRouteModList.forEach((item) => {
     if (routerMapping && item.meta.hideChildrenInMenu && typeof item.redirect === 'string') {
       item.path = item.redirect;
+    }
+
+    item.meta.title = t(<string>item.meta.localeKey);
+    if (item?.children) {
+      item.children.forEach((c) => {
+        c.meta.title = t(<string>c.meta.localeKey);
+        if (c?.children) {
+          c.children.forEach((d) => {
+            d.meta.title = t(<string>d.meta.localeKey);
+          });
+        }
+      });
     }
 
     if (item.meta?.single) {

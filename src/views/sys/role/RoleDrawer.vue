@@ -28,12 +28,14 @@
 
   import { getMenuTree } from '/@/api/sys/menu';
   import { getRoleById, saveRole, updateRole } from '/@/api/sys/role';
+  import {useI18n} from "/@/hooks/web/useI18n";
 
   export default defineComponent({
     name: 'RoleDrawer',
     components: { BasicDrawer, BasicForm, BasicTree },
     emits: ['success', 'register'],
     setup(_, { emit }) {
+      const { t } = useI18n();
       const isUpdate = ref(true);
       const treeData = ref<TreeItem[]>([]);
       const rowId = ref('');
@@ -47,9 +49,22 @@
         await resetFields();
         setDrawerProps({ confirmLoading: false });
         // 需要在setFieldsValue之前先填充treeData，否则Tree组件可能会报key not exist警告
-        if (unref(treeData).length === 0) {
-          treeData.value = (await getMenuTree(0)) as any as TreeItem[];
-        }
+        treeData.value = (await getMenuTree(0)) as any as TreeItem[];
+
+        treeData.value.forEach((e) => {
+          e.title = t('menu.m' + e.key);
+          if (e?.children) {
+            e.children.forEach((c) => {
+              c.title = t('menu.m' + c.key);
+              if (c?.children) {
+                c.children.forEach((d) => {
+                  d.title = t('menu.m' + d.key);
+                });
+              }
+            });
+          }
+        });
+
         isUpdate.value = !!data?.isUpdate;
 
         if (unref(isUpdate)) {

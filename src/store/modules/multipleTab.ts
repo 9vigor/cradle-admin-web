@@ -14,6 +14,9 @@ import { MULTIPLE_TABS_KEY } from '/@/enums/cacheEnum';
 
 import projectSetting from '/@/settings/projectSetting';
 import { useUserStore } from '/@/store/modules/user';
+import { useI18n } from '/@/hooks/web/useI18n';
+
+const { t } = useI18n();
 
 export interface MultipleTabState {
   cacheTabList: Set<string>;
@@ -49,6 +52,9 @@ export const useMultipleTabStore = defineStore({
   }),
   getters: {
     getTabList(): RouteLocationNormalized[] {
+      this.tabList.forEach((item) => {
+        item.meta.title = t(<string>item.meta.localeKey);
+      });
       return this.tabList;
     },
     getCachedTabList(): string[] {

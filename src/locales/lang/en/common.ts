@@ -27,8 +27,8 @@ export default {
   back: 'Back',
   status: 'Status',
   remarks: 'Remark',
-  createTime: 'Create Time',
-  updateTime: 'Update Time',
+  createTime: 'Create time',
+  updateTime: 'Update time',
 
   light: 'Light',
   dark: 'Dark',
