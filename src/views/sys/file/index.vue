@@ -58,7 +58,7 @@
   import { usePermission } from '/@/hooks/web/usePermission';
 
   export default defineComponent({
-    name: 'FileManagement',
+    name: 'SysFile',
     components: { BasicTable, TableAction, BasicUpload },
     setup() {
       const { t } = useI18n();

@@ -94,7 +94,7 @@
   import { usePermission } from '/@/hooks/web/usePermission';
 
   export default defineComponent({
-    name: 'UserManagement',
+    name: 'SysUser',
     components: {
       UnlockModal,
       UserDrawer,

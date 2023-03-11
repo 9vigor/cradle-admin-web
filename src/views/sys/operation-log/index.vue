@@ -42,7 +42,7 @@
   import { usePermission } from '/@/hooks/web/usePermission';
 
   export default defineComponent({
-    name: 'OperationLogManagement',
+    name: 'SysOperationLog',
     components: { BasicTable, OperationLogDrawer, TableAction },
     setup() {
       const { t } = useI18n();

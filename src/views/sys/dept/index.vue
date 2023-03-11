@@ -48,7 +48,7 @@
   import { usePermission } from '/@/hooks/web/usePermission';
 
   export default defineComponent({
-    name: 'DeptManagement',
+    name: 'SysDept',
     components: { BasicTable, DeptDrawer, TableAction },
     setup() {
       const { t } = useI18n();

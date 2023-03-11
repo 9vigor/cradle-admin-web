@@ -26,7 +26,7 @@
   import { useGlobSetting } from '/@/hooks/setting';
 
   export default defineComponent({
-    name: 'RegionManagement',
+    name: 'SysRegion',
     components: { BasicTree, PageWrapper },
     setup() {
       const { t } = useI18n();

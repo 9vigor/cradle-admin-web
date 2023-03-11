@@ -62,7 +62,7 @@
   import { usePermission } from '/@/hooks/web/usePermission';
 
   export default defineComponent({
-    name: 'RoleManagement',
+    name: 'SysRole',
     components: { BasicTable, TableAction, RoleDrawer, RoleAssignDrawer },
     setup() {
       const { t } = useI18n();

@@ -77,7 +77,7 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { usePermission } from '/@/hooks/web/usePermission';
   export default defineComponent({
-    name: 'CodegenManagement',
+    name: 'Codegen',
     components: { BasicTable, CodegenDrawer, TableAction },
     setup() {
       const { t } = useI18n();

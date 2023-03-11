@@ -33,7 +33,7 @@
   import { usePermission } from '/@/hooks/web/usePermission';
 
   export default defineComponent({
-    name: 'LoginLogManagement',
+    name: 'SysLoginLog',
     components: { BasicTable, TableAction },
     setup() {
       const { t } = useI18n();
