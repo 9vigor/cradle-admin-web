@@ -8,7 +8,7 @@ export default {
     timeoutMessage: 'Login timed out, please log in again!',
     apiTimeoutMessage: 'The interface request timed out, please refresh the page and try again!',
     apiRequestFailed: 'The interface request failed, please try again later!',
-    networkException: 'network anomaly',
+    networkException: 'Network anomaly',
     networkExceptionMsg:
       'Please check if your network connection is normal! The network is abnormal',
 
@@ -68,7 +68,7 @@ export default {
   login: {
     backSignIn: 'Back sign in',
     mobileSignInFormTitle: 'Mobile sign in',
-    qrSignInFormTitle: 'Qr code sign in',
+    qrSignInFormTitle: 'QR code sign in',
     signInFormTitle: 'Sign in',
     signUpFormTitle: 'Sign up',
     forgetFormTitle: 'Reset password',

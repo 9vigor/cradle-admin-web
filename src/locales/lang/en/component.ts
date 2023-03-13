@@ -1,8 +1,8 @@
 export default {
   app: {
     searchNotData: 'No search results yet',
-    toSearch: 'to search',
-    toNavigate: 'to navigate',
+    toSearch: 'To search',
+    toNavigate: 'To navigate',
   },
   countdown: {
     normalText: 'Get sms code',
@@ -62,16 +62,16 @@ export default {
     settingColumnShow: 'Column display',
     settingIndexColumnShow: 'Index column',
     settingSelectColumnShow: 'Selection column',
-    settingFixedLeft: 'Fixed Left',
-    settingFixedRight: 'Fixed Right',
-    settingFullScreen: 'Full Screen',
+    settingFixedLeft: 'Fixed left',
+    settingFixedRight: 'Fixed right',
+    settingFullScreen: 'Full screen',
     index: 'Index',
     total: 'Total of {total}',
   },
   time: {
     before: ' ago',
     after: ' after',
-    just: 'just now',
+    just: 'Just now',
     seconds: ' seconds',
     minutes: ' minutes',
     hours: ' hours',
@@ -99,7 +99,7 @@ export default {
     saveError: 'There is no file successfully uploaded and cannot be saved!',
 
     preview: 'Preview',
-    choose: 'Select the File',
+    choose: 'Select the file',
 
     accept: 'Support {0} format',
     acceptUpload: 'Only upload files in {0} format',
