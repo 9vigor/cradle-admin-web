@@ -88,7 +88,7 @@
       background-color: @dark-bg;
 
       &::before {
-        background-image: url(/@/assets/svg/login-bg-dark.svg);
+        background-image: url('/@/assets/svg/login-bg-dark.svg');
       }
 
       .ant-input,
@@ -96,7 +96,7 @@
         background-color: #232a3b;
       }
 
-      .ant-btn:not(.ant-btn-link):not(.ant-btn-primary) {
+      .ant-btn:not(.ant-btn-link, .ant-btn-primary) {
         border: 1px solid #4a5569;
       }
 
@@ -119,6 +119,7 @@
   .@{prefix-cls} {
     min-height: 100%;
     overflow: hidden;
+
     @media (max-width: @screen-xl) {
       background-color: #293146;
 
@@ -128,17 +129,18 @@
     }
 
     &::before {
+      content: '';
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       margin-left: -48%;
-      background-image: url(/@/assets/svg/login-bg.svg);
-      background-position: 100%;
+      background-image: url('/@/assets/svg/login-bg.svg');
       background-repeat: no-repeat;
+      background-position: 100%;
       background-size: auto 100%;
-      content: '';
+
       @media (max-width: @screen-xl) {
         display: none;
       }
@@ -150,8 +152,8 @@
       height: 30px;
 
       &__title {
-        font-size: 16px;
         color: #fff;
+        font-size: 16px;
       }
 
       img {
@@ -166,8 +168,8 @@
         height: 80px;
 
         &__title {
-          font-size: 24px;
           color: #fff;
+          font-size: 24px;
         }
 
         img {
@@ -178,8 +180,8 @@
 
     &-sign-in-way {
       .anticon {
-        font-size: 22px;
         color: #888;
+        font-size: 22px;
         cursor: pointer;
 
         &:hover {
@@ -213,8 +215,8 @@
     }
 
     .ant-divider-inner-text {
-      font-size: 12px;
       color: @text-color-secondary;
+      font-size: 12px;
     }
   }
 </style>
