@@ -8,7 +8,8 @@ import { createAppConfigPlugin } from './appConfig';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import purgeIcons from 'vite-plugin-purge-icons';
-import windiCSS from 'vite-plugin-windicss';
+// @ts-ignore
+import DefineOptions from 'unplugin-vue-define-options/vite';
 
 interface Options {
   isBuild: boolean;
@@ -19,13 +20,10 @@ interface Options {
 }
 
 async function createPlugins({ isBuild, root, enableMock, compress, enableAnalyze }: Options) {
-  const vitePlugins: (PluginOption | PluginOption[])[] = [vue(), vueJsx()];
+  const vitePlugins: (PluginOption | PluginOption[])[] = [vue(), vueJsx(), DefineOptions()];
 
   const appConfigPlugin = await createAppConfigPlugin({ root, isBuild });
   vitePlugins.push(appConfigPlugin);
-
-  // vite-plugin-windicss
-  vitePlugins.push(windiCSS());
 
   // vite-plugin-html
   vitePlugins.push(configHtmlPlugin({ isBuild }));
