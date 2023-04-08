@@ -1,8 +1,7 @@
-import { BasicColumn } from '/@/components/Table';
-import { FormSchema } from '/@/components/Table';
+import { BasicColumn, FormSchema } from '/@/components/Table';
 import { h } from 'vue';
 import { Tag } from 'ant-design-vue';
-import { Icon } from '/@/components/Icon';
+import Icon from '@/components/Icon/Icon.vue';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { StatusEnum } from '/@/enums/commonEnum';
 import { ResourceScopeEnum, ResourceTargetEnum, ResourceTypeEnum } from '/@/enums/menuEnum';
@@ -13,6 +12,7 @@ import {
   resourceTypeDictMap,
   statusDict,
 } from '/@/api/sys/dict';
+
 const { t } = useI18n();
 export const columns: BasicColumn[] = [
   {

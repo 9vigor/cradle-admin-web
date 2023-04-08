@@ -39,7 +39,7 @@
 
 <script lang="ts">
   import { defineComponent, ref } from 'vue';
-  import { Icon } from '/@/components/Icon';
+  import Icon from '@/components/Icon/Icon.vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { Tabs, TabPane, Alert, Descriptions, DescriptionsItem } from 'ant-design-vue';
