@@ -1,19 +1,19 @@
 version: '3.9'
 services:
-    cradle-admin-web:
-        build:
-            context: ../../
-        restart: always
-        container_name: cradle-admin-web
-        image: cradle-admin-web
-        networks:
-            - cradle_default
-        external_links:
-            - cradle-gateway
-        ports:
-            - "80:80"
+  cradle-admin-web:
+    build:
+      context: ../../
+    restart: always
+    container_name: cradle-admin-web
+    image: cradle-admin-web
+    networks:
+      - cradle_default
+    external_links:
+      - cradle-gateway
+    ports:
+      - '80:80'
 
 # 加入到后端网络， 默认为 cradle_default  | docker network ls   查看
 networks:
-    cradle_default:
-        external: true
+  cradle_default:
+    external: true

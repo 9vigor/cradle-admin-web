@@ -52,8 +52,8 @@ export const useMultipleTabStore = defineStore({
   }),
   getters: {
     getTabList(state): RouteLocationNormalized[] {
-        state.tabList.forEach((item) => {
-          item.meta.title = t(<string>item.meta.localeKey);
+      state.tabList.forEach((item) => {
+        item.meta.title = t(<string>item.meta.localeKey);
       });
       return state.tabList;
     },

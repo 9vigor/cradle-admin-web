@@ -28,7 +28,7 @@
 
   import { getMenuTree } from '/@/api/sys/menu';
   import { getRoleById, saveRole, updateRole } from '/@/api/sys/role';
-  import {useI18n} from "/@/hooks/web/useI18n";
+  import { useI18n } from '/@/hooks/web/useI18n';
 
   export default defineComponent({
     name: 'RoleDrawer',
