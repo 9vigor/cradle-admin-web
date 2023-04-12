@@ -1,5 +1,4 @@
-import { BasicColumn } from '/@/components/Table';
-import { FormSchema } from '/@/components/Table';
+import { BasicColumn, FormSchema } from '/@/components/Table';
 import { h } from 'vue';
 import { Tag } from 'ant-design-vue';
 
@@ -7,6 +6,7 @@ import { StatusEnum } from '/@/enums/commonEnum';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { dataScopeDict, dataScopeDictMap, statusDict } from '/@/api/sys/dict';
 import { checkCode, checkName } from '/@/api/sys/role';
+
 const { t } = useI18n();
 export const columns: BasicColumn[] = [
   {

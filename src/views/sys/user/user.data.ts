@@ -1,5 +1,4 @@
-import { BasicColumn } from '/@/components/Table';
-import { FormSchema } from '/@/components/Table';
+import { BasicColumn, FormSchema } from '/@/components/Table';
 import { statusDict, unlockTypeDict } from '/@/api/sys/dict';
 import { getAllRoleList } from '/@/api/sys/role';
 
@@ -7,6 +6,7 @@ import { UnlockTypeEnum } from '/@/enums/userEnum';
 import { checkMobile, checkUsername } from '/@/api/sys/user';
 import { StatusEnum } from '/@/enums/commonEnum';
 import { useI18n } from '/@/hooks/web/useI18n';
+
 const { t } = useI18n();
 export const columns: BasicColumn[] = [
   {

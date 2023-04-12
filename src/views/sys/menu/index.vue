@@ -46,6 +46,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { deleteMenu, getMenuList } from '/@/api/sys/menu';
   import { usePermission } from '/@/hooks/web/usePermission';
+
   export default defineComponent({
     name: 'SysMenu',
     components: { BasicTable, MenuDrawer, TableAction },

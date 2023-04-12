@@ -49,9 +49,8 @@
 
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { BasicUpload } from '/@/components/Upload';
-  import { uploadApi } from '/@/api/sys/file';
+  import { uploadApi, deleteFile, downloadFile, getFileList } from '/@/api/sys/file';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { deleteFile, downloadFile, getFileList } from '/@/api/sys/file';
   import { columns, searchFormSchema } from './file.data';
   import { downloadByData } from '/@/utils/file/download';
   import { createImgPreview } from '/@/components/Preview';

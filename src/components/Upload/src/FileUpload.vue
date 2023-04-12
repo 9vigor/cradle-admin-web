@@ -20,6 +20,7 @@
   import { Upload } from 'ant-design-vue';
   import { CloudUploadOutlined } from '@ant-design/icons-vue';
   import { nonProgressUploadApi, queryFileInfoApi } from '/@/api/sys/file';
+
   export default {
     name: 'FileUpload',
     components: { CloudUploadOutlined, Upload },

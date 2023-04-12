@@ -1,9 +1,9 @@
-import { BasicColumn } from '/@/components/Table';
-import { FormSchema } from '/@/components/Table';
+import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { templateDict, templateDictMap } from '/@/api/sys/dict';
 import { getTableList } from '/@/api/sys/codegen';
 import { CodeTemplateEnum } from '/@/enums/codegenEnum';
+
 const { t } = useI18n();
 export const columns: BasicColumn[] = [
   {

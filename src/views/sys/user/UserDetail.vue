@@ -33,7 +33,8 @@
   import { useGo } from '/@/hooks/web/usePage';
   import { useTabs } from '/@/hooks/web/useTabs';
   import { Tabs } from 'ant-design-vue';
-  import { getUserById } from '../../../api/sys/user';
+  import { getUserById } from '@/api/sys/user';
+
   export default defineComponent({
     name: 'UserDetail',
     components: { PageWrapper, ATabs: Tabs, ATabPane: Tabs.TabPane },

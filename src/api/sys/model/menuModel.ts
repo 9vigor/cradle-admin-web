@@ -1,6 +1,7 @@
 import type { RouteMeta } from 'vue-router';
 import { ResourceScopeEnum, ResourceTargetEnum, ResourceTypeEnum } from '/@/enums/menuEnum';
 import { StatusEnum } from '/@/enums/commonEnum';
+
 export interface RouteItem {
   path: string;
   component: any;

@@ -76,6 +76,7 @@
   import { downloadByData } from '/@/utils/file/download';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { usePermission } from '/@/hooks/web/usePermission';
+
   export default defineComponent({
     name: 'Codegen',
     components: { BasicTable, CodegenDrawer, TableAction },
